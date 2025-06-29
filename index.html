@@ -4,71 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Bhandar - Shop Calculator</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a2c8d3da3c.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header>
-    <h1>Banerjee Bhandar</h1>
-    <div class="top-info">
-      <label>Date: <input type="date" id="date" /></label>
-    </div>
-  </header>
+  <div class="container">
+    <header>
+      <h1>🛒 Banerjee Bhandar</h1>
+      <div class="top-info">
+        <label for="date">Date:</label>
+        <input type="date" id="date" />
+      </div>
+    </header>
 
-  <main>
-    <section class="input-section">
-      <input type="text" id="itemName" placeholder="Item name" />
+    <main>
+      <div class="input-section">
+        <input type="text" id="itemName" placeholder="Item Name" />
+        
+        <div class="input-pair">
+          <input type="number" id="quantity" placeholder="Qty" />
+          <select id="qtyUnit">
+            <option value="pcs">pcs</option>
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+          </select>
+        </div>
 
-      <div class="input-pair">
-        <input type="number" id="quantity" placeholder="Qty" />
-        <select id="quantityUnit">
-          <option value="pcs">pcs</option>
-          <option value="g">g</option>
-          <option value="kg">kg</option>
-        </select>
+        <div class="input-pair">
+          <input type="number" id="pricePerUnit" placeholder="Price per unit" />
+          <select id="priceUnit">
+            <option value="pcs">pcs</option>
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+          </select>
+        </div>
+
+        <button onclick="addItem()" class="add-btn">
+          <i class="fas fa-plus"></i> Add Item
+        </button>
       </div>
 
-      <div class="input-pair">
-        <input type="number" id="pricePerUnit" placeholder="Price/unit" />
-        <select id="priceUnit">
-          <option value="pcs">pcs</option>
-          <option value="g">g</option>
-          <option value="kg">kg</option>
-        </select>
+      <div class="item-list">
+        <h2>Items List</h2>
+        <table id="itemsTable">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
       </div>
 
-      <button onclick="addItem()"><i class="fas fa-plus"></i> Add Item</button>
-    </section>
-
-    <section class="receipt-section">
-      <h2>Items</h2>
-      <table id="itemTable">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Unit</th>
-            <th>Rate</th>
-            <th>Unit</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="itemList"></tbody>
-      </table>
-
-      <div class="button-group">
-        <button onclick="showPreview()"><i class="fas fa-eye"></i> Preview</button>
-        <button onclick="printReceipt()"><i class="fas fa-print"></i> Print</button>
+      <div class="actions">
+        <button onclick="previewReceipt()" class="preview-btn">
+          <i class="fas fa-eye"></i> Preview
+        </button>
+        <button onclick="window.print()" class="print-btn">
+          <i class="fas fa-print"></i> Print
+        </button>
       </div>
-    </section>
 
-    <section id="receiptPreview">
-      <h2>Receipt</h2>
-      <div id="receiptContent"></div>
-    </section>
-  </main>
+      <div id="receiptPreview" class="receipt"></div>
+    </main>
+
+    <footer>
+      <p>Made with ❤️ by Swarup</p>
+    </footer>
+  </div>
 
   <script src="script.js"></script>
 </body>
-</html>
+        </html>
