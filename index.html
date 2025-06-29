@@ -3,43 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shop Calculator</title>
+  <title>Banerjee Bhandar - Shop Calculator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="calculator">
-    <div class="top-info">
-      <input type="text" id="shopName" placeholder="Enter Shop Name" />
-      <input type="date" id="billDate" />
+  <div class="container">
+    <!-- Shop Header -->
+    <div class="header">
+      <h1>🛒 Banerjee Bhandar</h1>
+      <input type="date" id="date" />
     </div>
 
-    <h2>🛒 Shop Calculator</h2>
-
-    <input type="text" id="item" placeholder="Item Name" />
-    <input type="number" id="price" placeholder="Price per Item (₹)" />
-    <input type="number" id="qty" placeholder="Quantity" />
-    <button onclick="addItem()">Add to Bill</button>
-
-    <table id="billTable">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Qty</th>
-          <th>Price</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div class="total-section">
-      <p><strong>Grand Total:</strong> ₹<span id="grandTotal">0</span></p>
-      <input type="number" id="discount" placeholder="Discount %" />
-      <button onclick="applyDiscount()">Apply Discount</button>
-      <p class="discount"><strong>Final Total:</strong> ₹<span id="finalTotal">0</span></p>
+    <!-- Item Entry Form -->
+    <div class="form">
+      <input type="text" id="item" placeholder="Item Name" />
+      <input type="number" id="qty" placeholder="Quantity" />
+      <input type="number" id="price" placeholder="Price (₹)" />
+      <button onclick="addItem()">Add Item</button>
     </div>
 
-    <button onclick="window.print()">🖨️ Print Preview</button>
+    <!-- Bill Table -->
+    <div class="bill">
+      <table id="billTable">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- Summary Section -->
+      <div class="summary">
+        <p><strong>Grand Total: ₹<span id="grandTotal">0.00</span></strong></p>
+        <input type="number" id="discount" placeholder="Discount (%)" />
+        <button onclick="applyDiscount()">Apply Discount</button>
+        <p><strong>Final Total: ₹<span id="finalTotal">0.00</span></strong></p>
+      </div>
+    </div>
+
+    <!-- Print Button -->
+    <div class="footer">
+      <button onclick="window.print()">🖨️ Print Bill</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
