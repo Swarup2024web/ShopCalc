@@ -7,23 +7,24 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <!-- Shop Header -->
-    <div class="header">
-      <h1>🛒 Banerjee Bhandar</h1>
-      <input type="date" id="date" />
-    </div>
+  <header>
+    <h1>Banerjee Bhandar</h1>
+    <p>Date: <span id="currentDate"></span></p>
+  </header>
 
-    <!-- Item Entry Form -->
-    <div class="form">
-      <input type="text" id="item" placeholder="Item Name" />
-      <input type="number" id="qty" placeholder="Quantity" />
-      <input type="number" id="price" placeholder="Price (₹)" />
-      <button onclick="addItem()">Add Item</button>
-    </div>
+  <main>
+    <section class="form-section">
+      <h2>Add Item</h2>
+      <div class="form-group">
+        <input type="text" id="item" placeholder="Item Name" />
+        <input type="number" id="qty" placeholder="Quantity" />
+        <input type="number" id="price" placeholder="Price per Unit" />
+        <button onclick="addItem()">Add</button>
+      </div>
+    </section>
 
-    <!-- Bill Table -->
-    <div class="bill">
+    <section class="table-section">
+      <h2>Bill Items</h2>
       <table id="billTable">
         <thead>
           <tr>
@@ -34,24 +35,28 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <!-- Items will be added here -->
+        </tbody>
       </table>
+    </section>
 
-      <!-- Summary Section -->
-      <div class="summary">
-        <p><strong>Grand Total: ₹<span id="grandTotal">0.00</span></strong></p>
-        <input type="number" id="discount" placeholder="Discount (%)" />
-        <button onclick="applyDiscount()">Apply Discount</button>
-        <p><strong>Final Total: ₹<span id="finalTotal">0.00</span></strong></p>
-      </div>
-    </div>
+    <section class="summary">
+      <label for="discount">Discount (%): </label>
+      <input type="number" id="discount" value="0" onchange="applyDiscount()" />
+      <p>Grand Total: ₹<span id="grandTotal">0.00</span></p>
+      <p>Final Total: ₹<span id="finalTotal">0.00</span></p>
+    </section>
+  </main>
 
-    <!-- Print Button -->
-    <div class="footer">
-      <button onclick="window.print()">🖨️ Print Bill</button>
-    </div>
-  </div>
+  <footer>
+    <button onclick="window.print()">🖨️ Print</button>
+  </footer>
 
   <script src="script.js"></script>
+  <script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+  </script>
 </body>
 </html>
