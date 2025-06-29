@@ -3,82 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Banerjee Bhandar - Shop Calculator</title>
+  <title>Banerjee Bhandar Calculator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>Banerjee Bhandar</h1>
-      <div class="top-info">
-        <label for="date">Date:</label>
-        <input type="date" id="date" />
-      </div>
-    </header>
+    <h1>🛒 Banerjee Bhandar</h1>
 
-    <form id="itemForm">
-      <input type="text" id="itemName" placeholder="Item name" required />
+    <div class="top-section">
+      <label for="shop-date">🗓️ Date:</label>
+      <input type="date" id="shop-date" />
+    </div>
 
-      <input type="number" id="quantity" placeholder="Quantity" required />
-      <div class="unit-buttons">
-        <label>Qty Unit:</label>
-        <div class="unit-group" id="qtyUnitGroup">
-          <button type="button" class="unit-btn active" data-unit="pcs">pcs</button>
-          <button type="button" class="unit-btn" data-unit="g">g</button>
-          <button type="button" class="unit-btn" data-unit="kg">kg</button>
-        </div>
+    <form id="item-form">
+      <div class="row">
+        <input type="text" id="item-name" placeholder="Item Name" required />
       </div>
 
-      <input type="number" id="pricePerUnit" placeholder="Price per unit" required />
-      <div class="unit-buttons">
-        <label>Price Unit:</label>
-        <div class="unit-group" id="priceUnitGroup">
-          <button type="button" class="unit-btn active" data-unit="pcs">pcs</button>
-          <button type="button" class="unit-btn" data-unit="g">g</button>
-          <button type="button" class="unit-btn" data-unit="kg">kg</button>
-        </div>
+      <div class="row">
+        <input type="number" id="item-qty" placeholder="Quantity" required />
+        <select id="qty-unit">
+          <option value="pcs">pcs</option>
+          <option value="g">g</option>
+          <option value="kg">kg</option>
+        </select>
       </div>
 
-      <button type="submit">Add</button>
+      <div class="row">
+        <input type="number" id="item-price" placeholder="Price" required />
+        <select id="price-unit">
+          <option value="pcs">pcs</option>
+          <option value="g">g</option>
+          <option value="kg">kg</option>
+        </select>
+      </div>
+
+      <button type="submit">➕ Add Item</button>
     </form>
 
-    <table id="itemTable">
+    <table>
       <thead>
         <tr>
           <th>Item</th>
           <th>Qty</th>
-          <th>Price/Unit</th>
+          <th>Rate</th>
           <th>Total</th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="itemList"></tbody>
+      <tbody id="items-body"></tbody>
     </table>
 
-    <div class="totals">
-      <strong>Total Amount: ₹<span id="totalAmount">0.00</span></strong>
+    <div class="total-section">
+      Grand Total: ₹<span id="grand-total">0.00</span>
     </div>
 
-    <div class="buttons">
-      <button onclick="previewReceipt()">Preview Receipt</button>
-      <button onclick="printReceipt()">Print Receipt</button>
+    <div class="action-buttons">
+      <button id="preview-btn">👀 Preview Receipt</button>
+      <button id="print-btn">🖨️ Print Receipt</button>
     </div>
 
-    <div id="receiptPreview" class="receipt hidden">
-      <h2>Banerjee Bhandar</h2>
-      <p>Date: <span id="receiptDate"></span></p>
+    <div id="receipt" class="hidden">
+      <h2>Receipt - Banerjee Bhandar</h2>
+      <p>Date: <span id="receipt-date"></span></p>
       <table>
         <thead>
           <tr>
             <th>Item</th>
             <th>Qty</th>
             <th>Rate</th>
-            <th>Amount</th>
+            <th>Total</th>
           </tr>
         </thead>
-        <tbody id="receiptItems"></tbody>
+        <tbody id="receipt-body"></tbody>
       </table>
-      <p class="total">Total: ₹<span id="receiptTotal">0.00</span></p>
+      <p><strong>Total:</strong> ₹<span id="receipt-total">0.00</span></p>
     </div>
   </div>
 
