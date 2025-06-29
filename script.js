@@ -1,101 +1,104 @@
-const itemList = [];
+const items = [];
+const unitMap = {
+  g: 1,
+  kg: 1000,
+  ml: 1,
+  litre: 1000,
+  pcs: 1
+};
 
-document.getElementById("addItem").addEventListener("click", () => {
-    const item = document.getElementById("item").value.trim();
-    const quantity = parseFloat(document.getElementById("quantity").value);
-    const qtyUnit = document.getElementById("qtyUnit").value;
-    const price = parseFloat(document.getElementById("price").value);
-    const priceUnit = document.getElementById("priceUnit").value;
+function addItem() {
+  const itemName = document.getElementById("itemName").value.trim();
+  const quantity = parseFloat(document.getElementById("quantity").value);
+  const quantityUnit = document.getElementById("quantityUnit").value;
+  const price = parseFloat(document.getElementById("price").value);
+  const priceUnit = document.getElementById("priceUnit").value;
 
-    if (!item || isNaN(quantity) || isNaN(price)) {
-        alert("Please enter valid item name, quantity and price.");
-        return;
+  if (!itemName || isNaN(quantity) || isNaN(price)) {
+    alert("Please enter valid item name, quantity, and price.");
+    return;
+  }
+
+  // Convert price to match quantity unit
+  let adjustedPrice = price;
+  if (quantityUnit !== priceUnit) {
+    if (unitMap[quantityUnit] && unitMap[priceUnit]) {
+      adjustedPrice = price * (unitMap[quantityUnit] / unitMap[priceUnit]);
+    } else {
+      alert("Incompatible units!");
+      return;
     }
+  }
 
-    // Validate and convert units
-    let unitCompatible = true;
-    let convertedQty = quantity;
-    let convertedPrice = price;
+  const total = (adjustedPrice * quantity).toFixed(2);
 
-    if (qtyUnit === "g" && priceUnit === "kg") {
-        convertedPrice = price / 1000; // ₹ per g
-    } else if (qtyUnit === "kg" && priceUnit === "g") {
-        convertedQty = quantity * 1000; // grams
-    } else if (qtyUnit !== priceUnit) {
-        alert("Incompatible units selected (e.g., pcs with kg/g not allowed).");
-        unitCompatible = false;
-    }
+  const item = {
+    name: itemName,
+    quantity,
+    quantityUnit,
+    price: price,
+    priceUnit,
+    total
+  };
 
-    if (!unitCompatible) return;
+  items.push(item);
+  renderTable();
+  clearInputs();
+}
 
-    const total = (convertedQty * convertedPrice).toFixed(2);
+function renderTable() {
+  const tbody = document.getElementById("itemTableBody");
+  tbody.innerHTML = "";
 
-    const itemObj = {
-        item,
-        quantity,
-        qtyUnit,
-        price,
-        priceUnit,
-        total
-    };
+  let grandTotal = 0;
 
-    itemList.push(itemObj);
-    updateTable();
-    clearInputs();
-});
+  items.forEach((item, index) => {
+    grandTotal += parseFloat(item.total);
 
-function updateTable() {
-    const tbody = document.querySelector("#itemTable tbody");
-    tbody.innerHTML = "";
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${item.name}</td>
+      <td>${item.quantity} ${item.quantityUnit}</td>
+      <td>${item.price} /${item.priceUnit}</td>
+      <td>₹${item.total}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick="editItem(${index})">Edit</button>
+        <button class="action-btn delete-btn" onclick="deleteItem(${index})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
 
-    itemList.forEach((item, index) => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${item.item}</td>
-            <td>${item.quantity} ${item.qtyUnit}</td>
-            <td>₹${item.price} per ${item.priceUnit}</td>
-            <td>₹${item.total}</td>
-            <td>
-                <button onclick="editItem(${index})">Edit</button>
-                <button onclick="deleteItem(${index})">Delete</button>
-            </td>
-        `;
-
-        tbody.appendChild(row);
-    });
-
-    const totalAmount = itemList.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2);
-    document.getElementById("totalAmount").textContent = `Total: ₹${totalAmount}`;
+  document.getElementById("totalAmount").innerText = `Total: ₹${grandTotal.toFixed(2)}`;
 }
 
 function clearInputs() {
-    document.getElementById("item").value = "";
-    document.getElementById("quantity").value = "";
-    document.getElementById("price").value = "";
+  document.getElementById("itemName").value = "";
+  document.getElementById("quantity").value = "";
+  document.getElementById("price").value = "";
 }
 
 function deleteItem(index) {
-    itemList.splice(index, 1);
-    updateTable();
+  items.splice(index, 1);
+  renderTable();
 }
 
 function editItem(index) {
-    const item = itemList[index];
-
-    document.getElementById("item").value = item.item;
-    document.getElementById("quantity").value = item.quantity;
-    document.getElementById("qtyUnit").value = item.qtyUnit;
-    document.getElementById("price").value = item.price;
-    document.getElementById("priceUnit").value = item.priceUnit;
-
-    deleteItem(index);
+  const item = items[index];
+  document.getElementById("itemName").value = item.name;
+  document.getElementById("quantity").value = item.quantity;
+  document.getElementById("quantityUnit").value = item.quantityUnit;
+  document.getElementById("price").value = item.price;
+  document.getElementById("priceUnit").value = item.priceUnit;
+  items.splice(index, 1);
+  renderTable();
 }
 
-document.getElementById("printReceipt").addEventListener("click", () => {
-    window.print();
-});
+function previewReceipt() {
+  window.print();
+}
 
-document.getElementById("previewReceipt").addEventListener("click", () => {
-    alert("Preview is available only through print preview (Ctrl + P).");
-});
+function printReceipt() {
+  window.print();
+      }
