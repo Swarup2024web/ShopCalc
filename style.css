@@ -1,186 +1,194 @@
-/* Reset styles */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* Body and Layout */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f2f2f2;
-  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f7f7f7;
   padding: 20px;
-  max-width: 900px;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
   margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
-h1 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.date-section {
+header {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.date-section input[type="date"] {
-  padding: 6px 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+header h1 {
+  font-size: 28px;
+  color: #2c3e50;
 }
 
-/* Form Section */
+.top-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
 form {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
-  justify-content: space-between;
 }
 
 form input[type="text"],
 form input[type="number"],
-form select {
+form input[type="date"] {
   padding: 8px;
-  font-size: 14px;
-  width: 48%;
+  flex: 1 1 120px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
-form button {
-  padding: 10px 20px;
-  background-color: #27ae60;
+.unit-buttons {
+  flex: 1 1 100%;
+}
+
+.unit-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.unit-btn {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.unit-btn.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #2980b9;
+}
+
+form button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #2ecc71;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 15px;
-  width: 100%;
 }
 
 form button:hover {
-  background-color: #2ecc71;
+  background-color: #27ae60;
 }
 
-/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
   margin-bottom: 20px;
 }
 
-th, td {
-  padding: 10px;
+table th,
+table td {
   border: 1px solid #ccc;
+  padding: 10px;
   text-align: center;
   font-size: 14px;
 }
 
-th {
-  background-color: #34495e;
-  color: white;
+.totals {
+  font-size: 18px;
+  text-align: right;
+  margin-bottom: 20px;
 }
 
-.actions button {
-  margin: 2px;
-  padding: 6px 10px;
-  font-size: 13px;
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  background-color: #2980b9;
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.actions button:first-child {
-  background-color: #f39c12;
-  color: white;
+.buttons button:hover {
+  background-color: #1c5980;
 }
 
-.actions button:last-child {
-  background-color: #e74c3c;
-  color: white;
+.receipt {
+  background-color: #fdfdfd;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 6px;
 }
 
-/* Total Price */
-#total {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: right;
+.receipt h2 {
+  text-align: center;
+  margin-bottom: 10px;
   color: #2c3e50;
-  margin-bottom: 20px;
 }
 
-/* Buttons for Receipt */
-.receipt-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+.receipt table {
+  width: 100%;
   margin-top: 10px;
 }
 
-.receipt-buttons button {
-  background-color: #2980b9;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 5px;
-  font-size: 15px;
-  cursor: pointer;
+.receipt .total {
+  text-align: right;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 16px;
 }
 
-.receipt-buttons button:hover {
-  background-color: #3498db;
-}
-
-/* Preview Modal */
-#previewModal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+.hidden {
   display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
 }
 
-#previewContent {
-  background-color: white;
-  padding: 20px;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 8px;
-  text-align: left;
-}
-
-/* Mobile Responsive */
-@media screen and (max-width: 600px) {
-  form input[type="text"],
-  form input[type="number"],
-  form select {
-    width: 100%;
-  }
-
+@media (max-width: 600px) {
   form {
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .receipt-buttons {
+  .unit-group {
+    flex-wrap: wrap;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .top-info {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
-  #total {
-    text-align: center;
+  table th,
+  table td {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .totals,
+  .receipt .total {
+    font-size: 16px;
   }
 }
