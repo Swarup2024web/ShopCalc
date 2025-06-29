@@ -1,47 +1,82 @@
-let grandTotal = 0;
+let items = [];
+let editingIndex = -1;
 
 function addItem() {
-  const item = document.getElementById("item").value;
+  const item = document.getElementById("item").value.trim();
+  const qty = parseFloat(document.getElementById("qty").value);
   const price = parseFloat(document.getElementById("price").value);
-  const qty = parseInt(document.getElementById("qty").value);
 
-  if (!item || isNaN(price) || isNaN(qty)) {
-    alert("Please enter valid item name, price, and quantity.");
+  if (!item || isNaN(qty) || isNaN(price)) {
+    alert("Please enter valid item, quantity and price.");
     return;
   }
 
-  const total = price * qty;
-  grandTotal += total;
+  const total = qty * price;
 
+  if (editingIndex > -1) {
+    items[editingIndex] = { item, qty, price, total };
+    editingIndex = -1;
+  } else {
+    items.push({ item, qty, price, total });
+  }
+
+  clearForm();
+  renderTable();
+}
+
+function renderTable() {
   const tbody = document.querySelector("#billTable tbody");
-  const row = document.createElement("tr");
+  tbody.innerHTML = "";
 
-  row.innerHTML = `
-    <td>${item}</td>
-    <td>${qty}</td>
-    <td>₹${price.toFixed(2)}</td>
-    <td>₹${total.toFixed(2)}</td>
-  `;
+  let grandTotal = 0;
 
-  tbody.appendChild(row);
+  items.forEach((entry, index) => {
+    grandTotal += entry.total;
 
-  document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
-  document.getElementById("finalTotal").textContent = grandTotal.toFixed(2);
+    const tr = document.createElement("tr");
 
-  // Clear inputs
-  document.getElementById("item").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("qty").value = "";
+    tr.innerHTML = `
+      <td>${entry.item}</td>
+      <td>${entry.qty}</td>
+      <td>₹${entry.price.toFixed(2)}</td>
+      <td>₹${entry.total.toFixed(2)}</td>
+      <td>
+        <button class="edit" onclick="editItem(${index})">Edit</button>
+        <button class="delete" onclick="deleteItem(${index})">Delete</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("grandTotal").innerText = grandTotal.toFixed(2);
+
+  const discount = parseFloat(document.getElementById("discount").value) || 0;
+  const finalTotal = grandTotal - (grandTotal * discount / 100);
+  document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
+}
+
+function editItem(index) {
+  const entry = items[index];
+  document.getElementById("item").value = entry.item;
+  document.getElementById("qty").value = entry.qty;
+  document.getElementById("price").value = entry.price;
+  editingIndex = index;
+}
+
+function deleteItem(index) {
+  if (confirm("Are you sure you want to delete this item?")) {
+    items.splice(index, 1);
+    renderTable();
+  }
 }
 
 function applyDiscount() {
-  const discount = parseFloat(document.getElementById("discount").value);
+  renderTable(); // Discount is handled during render
+}
 
-  if (isNaN(discount) || discount < 0 || discount > 100) {
-    alert("Enter a valid discount percentage (0–100)");
-    return;
-  }
-
-  const discountedTotal = grandTotal - (grandTotal * discount / 100);
-  document.getElementById("finalTotal").textContent = discountedTotal.toFixed(2);
+function clearForm() {
+  document.getElementById("item").value = "";
+  document.getElementById("qty").value = "";
+  document.getElementById("price").value = "";
 }
