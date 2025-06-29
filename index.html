@@ -3,82 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Banerjee Bhandar Calculator</title>
+  <title>Banerjee Bhandar - Shop Calculator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🛒 Banerjee Bhandar</h1>
+    <header>
+      <h1>🛒 Banerjee Bhandar</h1>
+      <label for="billDate">Date:</label>
+      <input type="date" id="billDate" />
+    </header>
 
-    <div class="top-section">
-      <label for="shop-date">🗓️ Date:</label>
-      <input type="date" id="shop-date" />
-    </div>
-
-    <form id="item-form">
-      <div class="row">
-        <input type="text" id="item-name" placeholder="Item Name" required />
+    <section class="form-section">
+      <div class="form-group">
+        <input type="text" id="item" placeholder="Item Name" />
       </div>
-
-      <div class="row">
-        <input type="number" id="item-qty" placeholder="Quantity" required />
-        <select id="qty-unit">
+      <div class="form-group-inline">
+        <input type="number" id="quantity" placeholder="Quantity" />
+        <select id="qtyUnit">
           <option value="pcs">pcs</option>
           <option value="g">g</option>
           <option value="kg">kg</option>
         </select>
       </div>
-
-      <div class="row">
-        <input type="number" id="item-price" placeholder="Price" required />
-        <select id="price-unit">
+      <div class="form-group-inline">
+        <input type="number" id="price" placeholder="Price per unit" />
+        <select id="priceUnit">
           <option value="pcs">pcs</option>
           <option value="g">g</option>
           <option value="kg">kg</option>
         </select>
       </div>
+      <button id="addItem">Add</button>
+    </section>
 
-      <button type="submit">➕ Add Item</button>
-    </form>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Qty</th>
-          <th>Rate</th>
-          <th>Total</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="items-body"></tbody>
-    </table>
-
-    <div class="total-section">
-      Grand Total: ₹<span id="grand-total">0.00</span>
-    </div>
-
-    <div class="action-buttons">
-      <button id="preview-btn">👀 Preview Receipt</button>
-      <button id="print-btn">🖨️ Print Receipt</button>
-    </div>
-
-    <div id="receipt" class="hidden">
-      <h2>Receipt - Banerjee Bhandar</h2>
-      <p>Date: <span id="receipt-date"></span></p>
-      <table>
+    <section class="table-section">
+      <table id="itemTable">
         <thead>
           <tr>
             <th>Item</th>
-            <th>Qty</th>
-            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Price per Unit</th>
             <th>Total</th>
+            <th>Action</th>
           </tr>
         </thead>
-        <tbody id="receipt-body"></tbody>
+        <tbody></tbody>
       </table>
-      <p><strong>Total:</strong> ₹<span id="receipt-total">0.00</span></p>
-    </div>
+      <div id="totalAmount">Total: ₹0.00</div>
+    </section>
+
+    <section class="action-buttons">
+      <button id="previewReceipt">Preview Receipt</button>
+      <button id="printReceipt">Print Receipt</button>
+    </section>
   </div>
 
   <script src="script.js"></script>
