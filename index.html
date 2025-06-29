@@ -5,78 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Bhandar - Shop Calculator</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://kit.fontawesome.com/a2c8d3da3c.js" crossorigin="anonymous"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>🛒 Banerjee Bhandar</h1>
-      <div class="top-info">
-        <label for="date">Date:</label>
-        <input type="date" id="date" />
-      </div>
-    </header>
+    <h1 class="shop-title">Banerjee Bhandar</h1>
 
-    <main>
-      <div class="input-section">
-        <input type="text" id="itemName" placeholder="Item Name" />
-        
-        <div class="input-pair">
-          <input type="number" id="quantity" placeholder="Qty" />
-          <select id="qtyUnit">
-            <option value="pcs">pcs</option>
-            <option value="g">g</option>
-            <option value="kg">kg</option>
-          </select>
-        </div>
+    <div class="top-section">
+      <label for="date">Date:</label>
+      <input type="date" id="date" />
+    </div>
 
-        <div class="input-pair">
-          <input type="number" id="pricePerUnit" placeholder="Price per unit" />
-          <select id="priceUnit">
-            <option value="pcs">pcs</option>
-            <option value="g">g</option>
-            <option value="kg">kg</option>
-          </select>
-        </div>
+    <div class="input-section">
+      <input type="text" id="item-name" placeholder="Item Name" />
+      <input type="number" id="quantity" placeholder="Qty" />
+      <select id="qty-unit">
+        <option value="pcs">pcs</option>
+        <option value="g">g</option>
+        <option value="kg">kg</option>
+        <option value="ml">ml</option>
+        <option value="L">L</option>
+      </select>
 
-        <button onclick="addItem()" class="add-btn">
-          <i class="fas fa-plus"></i> Add Item
-        </button>
-      </div>
+      <input type="number" id="price-per-unit" placeholder="Price/unit" />
+      <select id="price-unit">
+        <option value="pcs">pcs</option>
+        <option value="g">g</option>
+        <option value="kg">kg</option>
+        <option value="ml">ml</option>
+        <option value="L">L</option>
+      </select>
 
-      <div class="item-list">
-        <h2>Items List</h2>
-        <table id="itemsTable">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Qty</th>
-              <th>Unit Price</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="itemsBody"></tbody>
-        </table>
-      </div>
+      <button onclick="addItem()">Add Item</button>
+    </div>
 
-      <div class="actions">
-        <button onclick="previewReceipt()" class="preview-btn">
-          <i class="fas fa-eye"></i> Preview
-        </button>
-        <button onclick="window.print()" class="print-btn">
-          <i class="fas fa-print"></i> Print
-        </button>
-      </div>
+    <table id="item-table">
+      <thead>
+        <tr>
+          <th>Sl</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="item-table-body"></tbody>
+    </table>
 
-      <div id="receiptPreview" class="receipt"></div>
-    </main>
+    <div class="buttons">
+      <button onclick="previewReceipt()">
+        <i class="fas fa-eye"></i> Preview
+      </button>
+      <button onclick="printReceipt()">
+        <i class="fas fa-print"></i> Print
+      </button>
+    </div>
 
-    <footer>
-      <p>Made with ❤️ by Swarup</p>
-    </footer>
+    <div id="receipt" class="receipt-area"></div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Font Awesome CDN -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
-        </html>
+</html>
