@@ -7,56 +7,63 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🛒 Banerjee Bhandar</h1>
-      <label for="billDate">Date:</label>
-      <input type="date" id="billDate" />
-    </header>
 
-    <section class="form-section">
-      <div class="form-group">
-        <input type="text" id="item" placeholder="Item Name" />
-      </div>
-      <div class="form-group-inline">
-        <input type="number" id="quantity" placeholder="Quantity" />
-        <select id="qtyUnit">
+  <div class="container">
+    <!-- Shop Header -->
+    <div class="header">
+      <h1>Banerjee Bhandar</h1>
+      <p>Date: <span id="shopDate"></span></p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="form-group">
+      <input type="text" id="itemName" placeholder="Item Name" />
+      <div class="inline-group">
+        <input type="number" id="quantity" placeholder="Qty" />
+        <select id="quantityUnit">
           <option value="pcs">pcs</option>
           <option value="g">g</option>
           <option value="kg">kg</option>
         </select>
       </div>
-      <div class="form-group-inline">
-        <input type="number" id="price" placeholder="Price per unit" />
+      <div class="inline-group">
+        <input type="number" id="pricePerUnit" placeholder="Price" />
         <select id="priceUnit">
           <option value="pcs">pcs</option>
           <option value="g">g</option>
           <option value="kg">kg</option>
         </select>
       </div>
-      <button id="addItem">Add</button>
-    </section>
+      <button onclick="addItem()">Add</button>
+    </div>
 
-    <section class="table-section">
-      <table id="itemTable">
+    <!-- Receipt Display Area -->
+    <div id="receiptArea">
+      <h2 class="receipt-title">Banerjee Bhandar</h2>
+      <p class="receipt-date">Date: <span id="shopDatePrint"></span></p>
+
+      <table>
         <thead>
           <tr>
+            <th>#</th>
             <th>Item</th>
-            <th>Quantity</th>
-            <th>Price per Unit</th>
+            <th>Qty</th>
+            <th>Rate</th>
             <th>Total</th>
             <th>Action</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="itemTableBody"></tbody>
       </table>
-      <div id="totalAmount">Total: ₹0.00</div>
-    </section>
 
-    <section class="action-buttons">
-      <button id="previewReceipt">Preview Receipt</button>
-      <button id="printReceipt">Print Receipt</button>
-    </section>
+      <div class="total" id="totalAmount">Total: ₹0.00</div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+      <button onclick="previewReceipt()">Preview Receipt</button>
+      <button onclick="printReceipt()">Print Receipt</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
