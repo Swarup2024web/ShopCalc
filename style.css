@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,151 +6,144 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
     color: #333;
     padding: 20px;
-    min-height: 100vh;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #004d99;
+    color: #2c3e50;
 }
 
-/* Form Section */
+/* Form styles */
 form {
-    background: #fff;
+    background-color: #ffffff;
+    border-radius: 10px;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: 0 auto 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto 30px auto;
 }
 
 .form-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
     margin-bottom: 15px;
-    align-items: center;
 }
 
-.form-group label {
-    flex: 1 1 120px;
+label {
+    display: block;
+    margin-bottom: 6px;
     font-weight: bold;
 }
 
-.form-group input,
-.form-group select {
-    flex: 2 1 180px;
-    padding: 8px 10px;
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 8px 12px;
     font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 5px;
 }
 
-/* Inline dropdown next to input */
 .form-row {
     display: flex;
     gap: 10px;
 }
 
 .form-row input {
-    flex: 2;
+    flex: 1;
 }
 
 .form-row select {
-    flex: 1;
+    width: 80px;
 }
 
 /* Buttons */
 button {
-    padding: 10px 18px;
-    font-size: 16px;
-    background-color: #007acc;
-    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
     border: none;
     border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #005f99;
+    background-color: #2980b9;
 }
 
-/* Receipt Area */
+/* Receipt area */
 #receiptArea {
-    background: #fff;
+    background-color: #ffffff;
+    border-radius: 10px;
     padding: 20px;
-    border-radius: 12px;
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#receiptArea h2 {
-    color: #004d99;
-    text-align: center;
+#receiptDate {
+    text-align: right;
+    font-size: 14px;
+    color: #777;
     margin-bottom: 10px;
 }
 
-.receipt-date {
-    text-align: center;
-    font-size: 14px;
-    margin-bottom: 20px;
-    color: #666;
-}
-
-#itemTable {
+/* Table styling */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
-#itemTable th, #itemTable td {
+table, th, td {
     border: 1px solid #ccc;
+}
+
+th, td {
     padding: 10px;
     text-align: center;
-    font-size: 16px;
 }
 
-#itemTable th {
-    background-color: #007acc;
-    color: white;
+th {
+    background-color: #ecf0f1;
+    font-weight: bold;
 }
 
-#itemTable tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Total Amount */
 .total {
     text-align: right;
     font-size: 18px;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .form-group, .form-row {
+/* Action buttons in table */
+.action-buttons button {
+    margin: 0 5px;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+    .form-row {
         flex-direction: column;
-        align-items: stretch;
     }
 
-    .form-group label {
-        margin-bottom: 5px;
-    }
-
-    #itemTable th, #itemTable td {
-        font-size: 14px;
+    .form-row select {
+        width: 100%;
     }
 
     button {
         width: 100%;
+        margin-top: 10px;
     }
-      }
+}
