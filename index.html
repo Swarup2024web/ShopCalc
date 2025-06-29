@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    .calculator {
+      max-width: 600px;
+      background: white;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #34495e;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: white;
+    }
+
+    .total-section {
+      text-align: right;
+      font-size: 18px;
+      margin-top: 15px;
+    }
+
+    .discount {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>🛒 Shop Calculator</h2>
+    <input type="text" id="item" placeholder="Item Name" />
+    <input type="number" id="price" placeholder="Price per Item (₹)" />
+    <input type="number" id="qty" placeholder="Quantity" />
+    <button onclick="addItem()">Add to Bill</button>
+
+    <table id="billTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="total-section">
+      <p><strong>Grand Total:</strong> ₹<span id="grandTotal">0</span></p>
+      <input type="number" id="discount" placeholder="Discount %" />
+      <button onclick="applyDiscount()">Apply Discount</button>
+      <p class="discount"><strong>Final Total:</strong> ₹<span id="finalTotal">0</span></p>
+    </div>
+  </div>
+
+  <script>
+    let grandTotal = 0;
+
+    function addItem() {
+      const item = document.getElementById('item').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const qty = parseInt(document.getElementById('qty').value);
+
+      if (!item || isNaN(price) || isNaN(qty)) {
+        alert("Please fill all fields correctly!");
+        return;
+      }
+
+      const total = price * qty;
+      grandTotal += total;
+
+      const table = document.querySelector("#billTable tbody");
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${item}</td>
+        <td>${qty}</td>
+        <td>₹${price.toFixed(2)}</td>
+        <td>₹${total.toFixed(2)}</td>
+      `;
+      table.appendChild(row);
+
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+      document.getElementById('finalTotal').textContent = grandTotal.toFixed(2);
+
+      // Clear input
+      document.getElementById('item').value = "";
+      document.getElementById('price').value = "";
+      document.getElementById('qty').value = "";
+    }
+
+    function applyDiscount() {
+      const discount = parseFloat(document.getElementById('discount').value);
+      if (isNaN(discount) || discount < 0 || discount > 100) {
+        alert("Enter a valid discount percentage (0-100)");
+        return;
+      }
+      const finalAmount = grandTotal - (grandTotal * (discount / 100));
+      document.getElementById('finalTotal').textContent = finalAmount.toFixed(2);
+    }
+  </script>
+</body>
+</html>
