@@ -1,124 +1,152 @@
+// Global variables
+let selectedQtyUnit = 'pcs';
+let selectedPriceUnit = 'pcs';
 let items = [];
 
-function addItem() {
-    const name = document.getElementById("itemName").value.trim();
-    const qty = parseFloat(document.getElementById("itemQty").value);
-    const unit = document.getElementById("itemUnit").value;
-    const price = parseFloat(document.getElementById("itemPrice").value);
-    const priceUnit = document.getElementById("priceUnit").value;
+// Update unit button selections
+function setupUnitButtons() {
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedQtyUnit = btn.dataset.unit;
+            document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
 
-    if (!name || isNaN(qty) || isNaN(price)) {
-        alert("Please enter valid item details.");
-        return;
-    }
-
-    const total = qty * price;
-    items.push({ name, qty, unit, price, priceUnit, total });
-
-    document.getElementById("itemName").value = "";
-    document.getElementById("itemQty").value = "";
-    document.getElementById("itemPrice").value = "";
-
-    renderItems();
+    document.querySelectorAll('.price-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedPriceUnit = btn.dataset.unit;
+            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
 }
 
-function renderItems() {
-    const tbody = document.querySelector("#itemTable tbody");
-    tbody.innerHTML = "";
+// Add item to the list
+document.getElementById('item-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const itemName = document.getElementById('item-name').value.trim();
+    const quantity = parseFloat(document.getElementById('item-qty').value);
+    const pricePerQty = parseFloat(document.getElementById('item-price').value);
+
+    if (!itemName || isNaN(quantity) || isNaN(pricePerQty)) return;
+
+    const total = quantity * pricePerQty;
+
+    const item = {
+        name: itemName,
+        quantity: quantity,
+        qtyUnit: selectedQtyUnit,
+        price: pricePerQty,
+        priceUnit: selectedPriceUnit,
+        total: total
+    };
+
+    items.push(item);
+    updateItemList();
+    this.reset();
+    resetUnits();
+});
+
+// Reset unit selection
+function resetUnits() {
+    selectedQtyUnit = 'pcs';
+    selectedPriceUnit = 'pcs';
+    document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.qty-btn[data-unit="pcs"]').classList.add('active');
+    document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.price-btn[data-unit="pcs"]').classList.add('active');
+}
+
+// Update item list table
+function updateItemList() {
+    const tbody = document.getElementById('items-body');
+    tbody.innerHTML = '';
+
     let grandTotal = 0;
 
     items.forEach((item, index) => {
-        const row = document.createElement("tr");
+        grandTotal += item.total;
+        const tr = document.createElement('tr');
 
-        row.innerHTML = `
+        tr.innerHTML = `
             <td>${item.name}</td>
-            <td>${item.qty} ${item.unit}</td>
-            <td>₹${item.price.toFixed(2)} / ${item.priceUnit}</td>
-            <td>₹${item.total.toFixed(2)}</td>
+            <td>${item.quantity} ${item.qtyUnit}</td>
+            <td>${item.price} per ${item.priceUnit}</td>
+            <td>${item.total.toFixed(2)}</td>
             <td>
                 <button onclick="editItem(${index})">Edit</button>
                 <button onclick="deleteItem(${index})">Delete</button>
             </td>
         `;
-        tbody.appendChild(row);
-        grandTotal += item.total;
+
+        tbody.appendChild(tr);
     });
 
-    document.getElementById("total").textContent = `₹${grandTotal.toFixed(2)}`;
+    document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
 }
 
+// Delete item
 function deleteItem(index) {
-    if (confirm("Are you sure you want to delete this item?")) {
-        items.splice(index, 1);
-        renderItems();
-    }
+    items.splice(index, 1);
+    updateItemList();
 }
 
+// Edit item
 function editItem(index) {
     const item = items[index];
-    document.getElementById("itemName").value = item.name;
-    document.getElementById("itemQty").value = item.qty;
-    document.getElementById("itemUnit").value = item.unit;
-    document.getElementById("itemPrice").value = item.price;
-    document.getElementById("priceUnit").value = item.priceUnit;
+    document.getElementById('item-name').value = item.name;
+    document.getElementById('item-qty').value = item.quantity;
+    document.getElementById('item-price').value = item.price;
 
-    deleteItem(index);
-}
+    // Set active units
+    selectedQtyUnit = item.qtyUnit;
+    selectedPriceUnit = item.priceUnit;
 
-function showPreview() {
-    const shopName = "Banerjee Bhandar";
-    const date = document.getElementById("shopDate").value;
-
-    if (!date) {
-        alert("Please select the date.");
-        return;
-    }
-
-    let previewHTML = `<h2>${shopName}</h2><p><strong>Date:</strong> ${date}</p><hr>`;
-    previewHTML += `<table style="width:100%;border-collapse:collapse;" border="1">
-        <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Rate</th>
-            <th>Total</th>
-        </tr>`;
-
-    let total = 0;
-    items.forEach(item => {
-        previewHTML += `
-        <tr>
-            <td>${item.name}</td>
-            <td>${item.qty} ${item.unit}</td>
-            <td>₹${item.price} / ${item.priceUnit}</td>
-            <td>₹${item.total.toFixed(2)}</td>
-        </tr>`;
-        total += item.total;
+    document.querySelectorAll('.qty-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.unit === item.qtyUnit);
     });
 
-    previewHTML += `
-        <tr>
-            <td colspan="3" style="text-align:right;"><strong>Total:</strong></td>
-            <td><strong>₹${total.toFixed(2)}</strong></td>
-        </tr>
-    </table>`;
+    document.querySelectorAll('.price-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.unit === item.priceUnit);
+    });
 
-    document.getElementById("previewContent").innerHTML = previewHTML;
-    document.getElementById("previewModal").style.display = "block";
+    items.splice(index, 1);
+    updateItemList();
 }
 
-function closePreview() {
-    document.getElementById("previewModal").style.display = "none";
-}
+// Preview receipt
+document.getElementById('preview-btn').addEventListener('click', function () {
+    const date = document.getElementById('shop-date').value;
+    const receipt = document.getElementById('receipt');
+    const receiptBody = document.getElementById('receipt-body');
+    const receiptTotal = document.getElementById('receipt-total');
+    const receiptDate = document.getElementById('receipt-date');
 
-function printReceipt() {
-    showPreview();
-    setTimeout(() => {
-        const printContent = document.getElementById("previewContent").innerHTML;
-        const win = window.open("", "", "width=800,height=600");
-        win.document.write("<html><head><title>Print Receipt</title></head><body>");
-        win.document.write(printContent);
-        win.document.write("</body></html>");
-        win.document.close();
-        win.print();
-    }, 300);
-            }
+    receiptBody.innerHTML = '';
+    let total = 0;
+
+    items.forEach(item => {
+        total += item.total;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.quantity} ${item.qtyUnit}</td>
+            <td>${item.price} per ${item.priceUnit}</td>
+            <td>${item.total.toFixed(2)}</td>
+        `;
+        receiptBody.appendChild(row);
+    });
+
+    receiptTotal.textContent = total.toFixed(2);
+    receiptDate.textContent = date || '(No Date)';
+    receipt.classList.remove('hidden');
+});
+
+// Print receipt
+document.getElementById('print-btn').addEventListener('click', function () {
+    window.print();
+});
+
+// Initialize
+setupUnitButtons();
