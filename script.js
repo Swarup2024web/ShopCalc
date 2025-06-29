@@ -3,7 +3,7 @@ let selectedQtyUnit = 'pcs';
 let selectedPriceUnit = 'pcs';
 let items = [];
 
-// Update unit button selections
+// Setup unit buttons
 function setupUnitButtons() {
     document.querySelectorAll('.qty-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -22,22 +22,22 @@ function setupUnitButtons() {
     });
 }
 
-// Add item to the list
+// Add item
 document.getElementById('item-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    const itemName = document.getElementById('item-name').value.trim();
-    const quantity = parseFloat(document.getElementById('item-qty').value);
-    const pricePerQty = parseFloat(document.getElementById('item-price').value);
+    const name = document.getElementById('item-name').value.trim();
+    const qty = parseFloat(document.getElementById('item-qty').value);
+    const price = parseFloat(document.getElementById('item-price').value);
 
-    if (!itemName || isNaN(quantity) || isNaN(pricePerQty)) return;
+    if (!name || isNaN(qty) || isNaN(price)) return;
 
-    const total = quantity * pricePerQty;
+    const total = qty * price;
 
     const item = {
-        name: itemName,
-        quantity: quantity,
+        name: name,
+        quantity: qty,
         qtyUnit: selectedQtyUnit,
-        price: pricePerQty,
+        price: price,
         priceUnit: selectedPriceUnit,
         total: total
     };
@@ -45,30 +45,30 @@ document.getElementById('item-form').addEventListener('submit', function (e) {
     items.push(item);
     updateItemList();
     this.reset();
-    resetUnits();
+    resetUnitSelection();
 });
 
 // Reset unit selection
-function resetUnits() {
+function resetUnitSelection() {
     selectedQtyUnit = 'pcs';
     selectedPriceUnit = 'pcs';
+
     document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.qty-btn[data-unit="pcs"]').classList.add('active');
+
     document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.price-btn[data-unit="pcs"]').classList.add('active');
 }
 
-// Update item list table
+// Update item table
 function updateItemList() {
     const tbody = document.getElementById('items-body');
     tbody.innerHTML = '';
-
-    let grandTotal = 0;
+    let total = 0;
 
     items.forEach((item, index) => {
-        grandTotal += item.total;
+        total += item.total;
         const tr = document.createElement('tr');
-
         tr.innerHTML = `
             <td>${item.name}</td>
             <td>${item.quantity} ${item.qtyUnit}</td>
@@ -79,11 +79,10 @@ function updateItemList() {
                 <button onclick="deleteItem(${index})">Delete</button>
             </td>
         `;
-
         tbody.appendChild(tr);
     });
 
-    document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+    document.getElementById('grand-total').textContent = total.toFixed(2);
 }
 
 // Delete item
@@ -99,16 +98,15 @@ function editItem(index) {
     document.getElementById('item-qty').value = item.quantity;
     document.getElementById('item-price').value = item.price;
 
-    // Set active units
     selectedQtyUnit = item.qtyUnit;
     selectedPriceUnit = item.priceUnit;
 
     document.querySelectorAll('.qty-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.unit === item.qtyUnit);
+        b.classList.toggle('active', b.dataset.unit === selectedQtyUnit);
     });
 
     document.querySelectorAll('.price-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.unit === item.priceUnit);
+        b.classList.toggle('active', b.dataset.unit === selectedPriceUnit);
     });
 
     items.splice(index, 1);
@@ -116,14 +114,14 @@ function editItem(index) {
 }
 
 // Preview receipt
-document.getElementById('preview-btn').addEventListener('click', function () {
+document.getElementById('preview-btn').addEventListener('click', () => {
     const date = document.getElementById('shop-date').value;
     const receipt = document.getElementById('receipt');
-    const receiptBody = document.getElementById('receipt-body');
-    const receiptTotal = document.getElementById('receipt-total');
-    const receiptDate = document.getElementById('receipt-date');
+    const body = document.getElementById('receipt-body');
+    const totalField = document.getElementById('receipt-total');
+    const dateField = document.getElementById('receipt-date');
 
-    receiptBody.innerHTML = '';
+    body.innerHTML = '';
     let total = 0;
 
     items.forEach(item => {
@@ -135,18 +133,18 @@ document.getElementById('preview-btn').addEventListener('click', function () {
             <td>${item.price} per ${item.priceUnit}</td>
             <td>${item.total.toFixed(2)}</td>
         `;
-        receiptBody.appendChild(row);
+        body.appendChild(row);
     });
 
-    receiptTotal.textContent = total.toFixed(2);
-    receiptDate.textContent = date || '(No Date)';
+    totalField.textContent = total.toFixed(2);
+    dateField.textContent = date || '(No Date)';
     receipt.classList.remove('hidden');
 });
 
 // Print receipt
-document.getElementById('print-btn').addEventListener('click', function () {
+document.getElementById('print-btn').addEventListener('click', () => {
     window.print();
 });
 
-// Initialize
+// Initialize unit buttons
 setupUnitButtons();
