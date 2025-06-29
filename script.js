@@ -1,150 +1,95 @@
-// Global variables
-let selectedQtyUnit = 'pcs';
-let selectedPriceUnit = 'pcs';
 let items = [];
 
-// Setup unit buttons
-function setupUnitButtons() {
-    document.querySelectorAll('.qty-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectedQtyUnit = btn.dataset.unit;
-            document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-
-    document.querySelectorAll('.price-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectedPriceUnit = btn.dataset.unit;
-            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-}
-
-// Add item
 document.getElementById('item-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = document.getElementById('item-name').value.trim();
-    const qty = parseFloat(document.getElementById('item-qty').value);
-    const price = parseFloat(document.getElementById('item-price').value);
+  e.preventDefault();
 
-    if (!name || isNaN(qty) || isNaN(price)) return;
+  const name = document.getElementById('item-name').value.trim();
+  const qty = parseFloat(document.getElementById('item-qty').value);
+  const price = parseFloat(document.getElementById('item-price').value);
+  const qtyUnit = document.getElementById('qty-unit').value;
+  const priceUnit = document.getElementById('price-unit').value;
 
-    const total = qty * price;
+  if (!name || isNaN(qty) || isNaN(price)) return;
 
-    const item = {
-        name: name,
-        quantity: qty,
-        qtyUnit: selectedQtyUnit,
-        price: price,
-        priceUnit: selectedPriceUnit,
-        total: total
-    };
+  // Validate unit match
+  if (qtyUnit !== priceUnit) {
+    alert("Quantity unit and Price unit must match!");
+    return;
+  }
 
-    items.push(item);
-    updateItemList();
-    this.reset();
-    resetUnitSelection();
+  const total = qty * price;
+
+  items.push({ name, quantity: qty, qtyUnit, price, priceUnit, total });
+  this.reset();
+  updateItems();
 });
 
-// Reset unit selection
-function resetUnitSelection() {
-    selectedQtyUnit = 'pcs';
-    selectedPriceUnit = 'pcs';
+function updateItems() {
+  const tbody = document.getElementById('items-body');
+  tbody.innerHTML = '';
+  let grandTotal = 0;
 
-    document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.qty-btn[data-unit="pcs"]').classList.add('active');
+  items.forEach((item, index) => {
+    grandTotal += item.total;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.quantity} ${item.qtyUnit}</td>
+      <td>${item.price} per ${item.priceUnit}</td>
+      <td>${item.total.toFixed(2)}</td>
+      <td>
+        <button onclick="editItem(${index})">✏️</button>
+        <button onclick="deleteItem(${index})">🗑️</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
 
-    document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.price-btn[data-unit="pcs"]').classList.add('active');
+  document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
 }
 
-// Update item table
-function updateItemList() {
-    const tbody = document.getElementById('items-body');
-    tbody.innerHTML = '';
-    let total = 0;
-
-    items.forEach((item, index) => {
-        total += item.total;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.quantity} ${item.qtyUnit}</td>
-            <td>${item.price} per ${item.priceUnit}</td>
-            <td>${item.total.toFixed(2)}</td>
-            <td>
-                <button onclick="editItem(${index})">Edit</button>
-                <button onclick="deleteItem(${index})">Delete</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    document.getElementById('grand-total').textContent = total.toFixed(2);
-}
-
-// Delete item
 function deleteItem(index) {
-    items.splice(index, 1);
-    updateItemList();
+  items.splice(index, 1);
+  updateItems();
 }
 
-// Edit item
 function editItem(index) {
-    const item = items[index];
-    document.getElementById('item-name').value = item.name;
-    document.getElementById('item-qty').value = item.quantity;
-    document.getElementById('item-price').value = item.price;
-
-    selectedQtyUnit = item.qtyUnit;
-    selectedPriceUnit = item.priceUnit;
-
-    document.querySelectorAll('.qty-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.unit === selectedQtyUnit);
-    });
-
-    document.querySelectorAll('.price-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.unit === selectedPriceUnit);
-    });
-
-    items.splice(index, 1);
-    updateItemList();
+  const item = items[index];
+  document.getElementById('item-name').value = item.name;
+  document.getElementById('item-qty').value = item.quantity;
+  document.getElementById('item-price').value = item.price;
+  document.getElementById('qty-unit').value = item.qtyUnit;
+  document.getElementById('price-unit').value = item.priceUnit;
+  items.splice(index, 1);
+  updateItems();
 }
 
-// Preview receipt
 document.getElementById('preview-btn').addEventListener('click', () => {
-    const date = document.getElementById('shop-date').value;
-    const receipt = document.getElementById('receipt');
-    const body = document.getElementById('receipt-body');
-    const totalField = document.getElementById('receipt-total');
-    const dateField = document.getElementById('receipt-date');
+  const receiptBody = document.getElementById('receipt-body');
+  const receiptTotal = document.getElementById('receipt-total');
+  const receiptDate = document.getElementById('receipt-date');
+  const date = document.getElementById('shop-date').value;
 
-    body.innerHTML = '';
-    let total = 0;
+  receiptBody.innerHTML = '';
+  let total = 0;
 
-    items.forEach(item => {
-        total += item.total;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.quantity} ${item.qtyUnit}</td>
-            <td>${item.price} per ${item.priceUnit}</td>
-            <td>${item.total.toFixed(2)}</td>
-        `;
-        body.appendChild(row);
-    });
+  items.forEach(item => {
+    total += item.total;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.quantity} ${item.qtyUnit}</td>
+      <td>${item.price} per ${item.priceUnit}</td>
+      <td>${item.total.toFixed(2)}</td>
+    `;
+    receiptBody.appendChild(row);
+  });
 
-    totalField.textContent = total.toFixed(2);
-    dateField.textContent = date || '(No Date)';
-    receipt.classList.remove('hidden');
+  receiptTotal.textContent = total.toFixed(2);
+  receiptDate.textContent = date || '(No Date)';
+  document.getElementById('receipt').classList.remove('hidden');
 });
 
-// Print receipt
 document.getElementById('print-btn').addEventListener('click', () => {
-    window.print();
+  window.print();
 });
-
-// Initialize unit buttons
-setupUnitButtons();
