@@ -1,105 +1,117 @@
 let items = [];
 
-document.getElementById("addItemBtn").addEventListener("click", addItem);
-document.getElementById("previewBtn").addEventListener("click", previewReceipt);
-document.getElementById("printBtn").addEventListener("click", () => window.print());
-
-function getConversionFactor(qtyUnit, priceUnit) {
-    const conversion = {
-        g: { kg: 0.001 },
-        kg: { g: 1000 },
-        ml: { l: 0.001 },
-        l: { ml: 1000 }
-    };
-
-    if (qtyUnit === priceUnit) return 1;
-
-    return conversion[qtyUnit]?.[priceUnit] || (1 / (conversion[priceUnit]?.[qtyUnit] || 1));
-}
-
 function addItem() {
-    const name = document.getElementById("itemName").value.trim();
-    const qty = parseFloat(document.getElementById("itemQty").value);
-    const qtyUnit = document.getElementById("qtyUnit").value;
-    const pricePerUnit = parseFloat(document.getElementById("itemPrice").value);
+    const itemName = document.getElementById("itemName").value.trim();
+    const quantity = parseFloat(document.getElementById("quantity").value);
+    const quantityUnit = document.getElementById("quantityUnit").value;
+    const price = parseFloat(document.getElementById("price").value);
     const priceUnit = document.getElementById("priceUnit").value;
 
-    if (!name || isNaN(qty) || isNaN(pricePerUnit)) {
-        alert("Please enter valid item details.");
+    if (!itemName || isNaN(quantity) || isNaN(price)) {
+        alert("Please enter all fields correctly.");
         return;
     }
 
-    const factor = getConversionFactor(qtyUnit, priceUnit);
-    const convertedQty = qty * factor;
-    const total = convertedQty * pricePerUnit;
+    // Convert units to base (grams or pcs)
+    const convertedQty = convertToGramsOrPcs(quantity, quantityUnit);
+    const convertedPricePerGram = convertPriceToPerGram(price, priceUnit);
 
-    items.push({ name, qty, qtyUnit, pricePerUnit, priceUnit, total });
+    // Calculate total
+    const total = (convertedQty * convertedPricePerGram).toFixed(2);
+
+    const item = {
+        name: itemName,
+        quantity: quantity,
+        quantityUnit: quantityUnit,
+        price: price,
+        priceUnit: priceUnit,
+        total: total
+    };
+
+    items.push(item);
+    renderItems();
     clearInputs();
-    updateReceipt();
 }
 
-function clearInputs() {
-    document.getElementById("itemName").value = "";
-    document.getElementById("itemQty").value = "";
-    document.getElementById("itemPrice").value = "";
+function convertToGramsOrPcs(value, unit) {
+    if (unit === "kg") return value * 1000;
+    return value; // for g or pcs
 }
 
-function updateReceipt() {
-    const tbody = document.querySelector("#itemTable tbody");
+function convertPriceToPerGram(price, unit) {
+    if (unit === "kg") return price / 1000;
+    return price; // for g or pcs
+}
+
+function renderItems() {
+    const tbody = document.getElementById("itemList");
     tbody.innerHTML = "";
 
-    let grandTotal = 0;
+    let totalAmount = 0;
 
     items.forEach((item, index) => {
-        grandTotal += item.total;
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
             <td>${item.name}</td>
-            <td>${item.qty} ${item.qtyUnit}</td>
-            <td>${item.pricePerUnit} per ${item.priceUnit}</td>
-            <td>₹${item.total.toFixed(2)}</td>
-            <td>
+            <td>${item.quantity} ${item.quantityUnit}</td>
+            <td>₹${item.price} / ${item.priceUnit}</td>
+            <td>₹${item.total}</td>
+            <td class="action-buttons">
                 <button onclick="editItem(${index})">Edit</button>
                 <button onclick="deleteItem(${index})">Delete</button>
             </td>
         `;
-        tbody.appendChild(row);
+        tbody.appendChild(tr);
+        totalAmount += parseFloat(item.total);
     });
 
-    document.getElementById("totalAmount").textContent = grandTotal.toFixed(2);
+    document.getElementById("totalAmount").innerText = `Total: ₹${totalAmount.toFixed(2)}`;
+}
+
+function clearInputs() {
+    document.getElementById("itemName").value = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("quantityUnit").value = "pcs";
+    document.getElementById("priceUnit").value = "pcs";
 }
 
 function deleteItem(index) {
-    if (confirm("Delete this item?")) {
-        items.splice(index, 1);
-        updateReceipt();
-    }
+    items.splice(index, 1);
+    renderItems();
 }
 
 function editItem(index) {
     const item = items[index];
     document.getElementById("itemName").value = item.name;
-    document.getElementById("itemQty").value = item.qty;
-    document.getElementById("qtyUnit").value = item.qtyUnit;
-    document.getElementById("itemPrice").value = item.pricePerUnit;
+    document.getElementById("quantity").value = item.quantity;
+    document.getElementById("quantityUnit").value = item.quantityUnit;
+    document.getElementById("price").value = item.price;
     document.getElementById("priceUnit").value = item.priceUnit;
 
-    items.splice(index, 1);
-    updateReceipt();
+    deleteItem(index);
 }
 
 function previewReceipt() {
     const shopName = "Banerjee Bhandar";
-    const date = document.getElementById("shopDate").value;
-    const previewArea = document.getElementById("receiptArea");
-
+    const date = document.getElementById("date").value;
     if (!date) {
         alert("Please select a date.");
         return;
     }
 
-    previewArea.querySelector(".receipt-title").textContent = shopName;
-    previewArea.querySelector(".receipt-date").textContent = `Date: ${date}`;
-    updateReceipt();
-                              }
+    let previewText = `🧾 ${shopName}\n📅 Date: ${date}\n\n`;
+    let total = 0;
+
+    items.forEach(item => {
+        previewText += `${item.name} - ${item.quantity} ${item.quantityUnit} @ ₹${item.price}/${item.priceUnit} = ₹${item.total}\n`;
+        total += parseFloat(item.total);
+    });
+
+    previewText += `\nTotal: ₹${total.toFixed(2)}`;
+    alert(previewText);
+}
+
+function printReceipt() {
+    window.print();
+}
