@@ -1,117 +1,91 @@
 let items = [];
 
+function convertUnit(value, from, to) {
+  const conversions = {
+    'g': { 'kg': value / 1000, 'g': value, 'pcs': value },
+    'kg': { 'g': value * 1000, 'kg': value, 'pcs': value },
+    'pcs': { 'pcs': value, 'g': value, 'kg': value }
+  };
+  return conversions[from][to] || value;
+}
+
 function addItem() {
-    const itemName = document.getElementById("itemName").value.trim();
-    const quantity = parseFloat(document.getElementById("quantity").value);
-    const quantityUnit = document.getElementById("quantityUnit").value;
-    const price = parseFloat(document.getElementById("price").value);
-    const priceUnit = document.getElementById("priceUnit").value;
+  const itemName = document.getElementById("itemName").value.trim();
+  const quantity = parseFloat(document.getElementById("quantity").value);
+  const quantityUnit = document.getElementById("quantityUnit").value;
+  const price = parseFloat(document.getElementById("price").value);
+  const priceUnit = document.getElementById("priceUnit").value;
 
-    if (!itemName || isNaN(quantity) || isNaN(price)) {
-        alert("Please enter all fields correctly.");
-        return;
-    }
+  if (!itemName || isNaN(quantity) || isNaN(price)) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
 
-    // Convert units to base (grams or pcs)
-    const convertedQty = convertToGramsOrPcs(quantity, quantityUnit);
-    const convertedPricePerGram = convertPriceToPerGram(price, priceUnit);
+  const convertedQty = convertUnit(quantity, quantityUnit, priceUnit);
+  const total = (convertedQty * price).toFixed(2);
 
-    // Calculate total
-    const total = (convertedQty * convertedPricePerGram).toFixed(2);
-
-    const item = {
-        name: itemName,
-        quantity: quantity,
-        quantityUnit: quantityUnit,
-        price: price,
-        priceUnit: priceUnit,
-        total: total
-    };
-
-    items.push(item);
-    renderItems();
-    clearInputs();
+  items.push({ itemName, quantity, quantityUnit, price, priceUnit, total });
+  renderTable();
+  clearForm();
 }
 
-function convertToGramsOrPcs(value, unit) {
-    if (unit === "kg") return value * 1000;
-    return value; // for g or pcs
-}
+function renderTable() {
+  const itemList = document.getElementById("itemList");
+  itemList.innerHTML = "";
+  let grandTotal = 0;
 
-function convertPriceToPerGram(price, unit) {
-    if (unit === "kg") return price / 1000;
-    return price; // for g or pcs
-}
+  items.forEach((item, index) => {
+    grandTotal += parseFloat(item.total);
 
-function renderItems() {
-    const tbody = document.getElementById("itemList");
-    tbody.innerHTML = "";
+    const row = `<tr>
+      <td>${item.itemName}</td>
+      <td>${item.quantity} ${item.quantityUnit}</td>
+      <td>₹${item.price}/${item.priceUnit}</td>
+      <td>₹${item.total}</td>
+      <td><button onclick="deleteItem(${index})">🗑️</button></td>
+    </tr>`;
+    itemList.innerHTML += row;
+  });
 
-    let totalAmount = 0;
-
-    items.forEach((item, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.quantity} ${item.quantityUnit}</td>
-            <td>₹${item.price} / ${item.priceUnit}</td>
-            <td>₹${item.total}</td>
-            <td class="action-buttons">
-                <button onclick="editItem(${index})">Edit</button>
-                <button onclick="deleteItem(${index})">Delete</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-        totalAmount += parseFloat(item.total);
-    });
-
-    document.getElementById("totalAmount").innerText = `Total: ₹${totalAmount.toFixed(2)}`;
-}
-
-function clearInputs() {
-    document.getElementById("itemName").value = "";
-    document.getElementById("quantity").value = "";
-    document.getElementById("price").value = "";
-    document.getElementById("quantityUnit").value = "pcs";
-    document.getElementById("priceUnit").value = "pcs";
+  document.getElementById("totalDisplay").innerText = `Total: ₹${grandTotal.toFixed(2)}`;
 }
 
 function deleteItem(index) {
-    items.splice(index, 1);
-    renderItems();
+  items.splice(index, 1);
+  renderTable();
 }
 
-function editItem(index) {
-    const item = items[index];
-    document.getElementById("itemName").value = item.name;
-    document.getElementById("quantity").value = item.quantity;
-    document.getElementById("quantityUnit").value = item.quantityUnit;
-    document.getElementById("price").value = item.price;
-    document.getElementById("priceUnit").value = item.priceUnit;
-
-    deleteItem(index);
+function clearForm() {
+  document.getElementById("itemName").value = "";
+  document.getElementById("quantity").value = "";
+  document.getElementById("price").value = "";
 }
 
-function previewReceipt() {
-    const shopName = "Banerjee Bhandar";
-    const date = document.getElementById("date").value;
-    if (!date) {
-        alert("Please select a date.");
-        return;
-    }
+function showPreview() {
+  const previewDiv = document.getElementById("receiptPreview");
+  const content = document.getElementById("previewContent");
+  content.innerHTML = "";
 
-    let previewText = `🧾 ${shopName}\n📅 Date: ${date}\n\n`;
-    let total = 0;
+  if (items.length === 0) {
+    alert("No items to preview.");
+    return;
+  }
 
-    items.forEach(item => {
-        previewText += `${item.name} - ${item.quantity} ${item.quantityUnit} @ ₹${item.price}/${item.priceUnit} = ₹${item.total}\n`;
-        total += parseFloat(item.total);
-    });
+  let html = `<p><strong>Shop:</strong> Banerjee Bhandar</p>`;
+  html += `<p><strong>Date:</strong> ${document.getElementById("date").value || "Not specified"}</p>`;
+  html += "<ul>";
+  items.forEach((item, index) => {
+    html += `<li>${index + 1}. ${item.itemName} - ${item.quantity}${item.quantityUnit} @ ₹${item.price}/${item.priceUnit} = ₹${item.total}</li>`;
+  });
+  html += "</ul>";
 
-    previewText += `\nTotal: ₹${total.toFixed(2)}`;
-    alert(previewText);
+  const total = items.reduce((sum, item) => sum + parseFloat(item.total), 0);
+  html += `<p><strong>Total:</strong> ₹${total.toFixed(2)}</p>`;
+
+  content.innerHTML = html;
+  previewDiv.classList.remove("hidden");
 }
 
 function printReceipt() {
-    window.print();
-}
+  window.print();
+      }
