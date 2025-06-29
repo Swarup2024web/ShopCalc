@@ -1,70 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Banerjee Bhandar - Shop Calculator</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banerjee Bhandar - Shop Calculator</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Banerjee Bhandar</h1>
-        <div class="top-inputs">
-            <label>Date: <input type="date" id="shopDate" /></label>
+  <div class="container">
+    <header>
+      <h1>Banerjee Bhandar</h1>
+      <div class="top-info">
+        <label for="date">Date:</label>
+        <input type="date" id="date" />
+      </div>
+    </header>
+
+    <form id="itemForm">
+      <input type="text" id="itemName" placeholder="Item name" required />
+
+      <input type="number" id="quantity" placeholder="Quantity" required />
+      <div class="unit-buttons">
+        <label>Qty Unit:</label>
+        <div class="unit-group" id="qtyUnitGroup">
+          <button type="button" class="unit-btn active" data-unit="pcs">pcs</button>
+          <button type="button" class="unit-btn" data-unit="g">g</button>
+          <button type="button" class="unit-btn" data-unit="kg">kg</button>
         </div>
+      </div>
 
-        <div class="inputs">
-            <input type="text" id="itemName" placeholder="Item Name" />
-            <input type="number" id="itemQty" placeholder="Quantity" />
-            <select id="itemUnit">
-                <option value="pcs">pcs</option>
-                <option value="kg">kg</option>
-                <option value="g">g</option>
-                <option value="ltr">ltr</option>
-            </select>
-
-            <input type="number" id="itemPrice" placeholder="Price per unit" />
-            <select id="priceUnit">
-                <option value="pcs">pcs</option>
-                <option value="kg">kg</option>
-                <option value="g">g</option>
-                <option value="ltr">ltr</option>
-            </select>
-
-            <button onclick="addItem()">Add Item</button>
+      <input type="number" id="pricePerUnit" placeholder="Price per unit" required />
+      <div class="unit-buttons">
+        <label>Price Unit:</label>
+        <div class="unit-group" id="priceUnitGroup">
+          <button type="button" class="unit-btn active" data-unit="pcs">pcs</button>
+          <button type="button" class="unit-btn" data-unit="g">g</button>
+          <button type="button" class="unit-btn" data-unit="kg">kg</button>
         </div>
+      </div>
 
-        <table id="itemTable">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Price/Unit</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+      <button type="submit">Add</button>
+    </form>
 
-        <div class="totals">
-            <strong>Total: <span id="total">₹0.00</span></strong>
-        </div>
+    <table id="itemTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price/Unit</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="itemList"></tbody>
+    </table>
 
-        <div class="buttons">
-            <button onclick="showPreview()">Preview Receipt</button>
-            <button onclick="printReceipt()">Print Receipt</button>
-        </div>
+    <div class="totals">
+      <strong>Total Amount: ₹<span id="totalAmount">0.00</span></strong>
     </div>
 
-    <!-- Preview Modal -->
-    <div id="previewModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closePreview()">&times;</span>
-            <div id="previewContent"></div>
-        </div>
+    <div class="buttons">
+      <button onclick="previewReceipt()">Preview Receipt</button>
+      <button onclick="printReceipt()">Print Receipt</button>
     </div>
 
-    <script src="script.js"></script>
+    <div id="receiptPreview" class="receipt hidden">
+      <h2>Banerjee Bhandar</h2>
+      <p>Date: <span id="receiptDate"></span></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody id="receiptItems"></tbody>
+      </table>
+      <p class="total">Total: ₹<span id="receiptTotal">0.00</span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
