@@ -7,56 +7,61 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Banerjee Bhandar</h1>
-    <p>Date: <span id="currentDate"></span></p>
-  </header>
+  <div class="container">
+    <header>
+      <h1>🛒 Banerjee Bhandar</h1>
+      <p>Date: <span id="date"></span></p>
+    </header>
 
-  <main>
-    <section class="form-section">
-      <h2>Add Item</h2>
-      <div class="form-group">
-        <input type="text" id="item" placeholder="Item Name" />
-        <input type="number" id="qty" placeholder="Quantity" />
-        <input type="number" id="price" placeholder="Price per Unit" />
-        <button onclick="addItem()">Add</button>
+    <section class="inputs">
+      <input type="text" id="item" placeholder="Item name" />
+      <div class="input-group">
+        <input type="number" id="qty" placeholder="Qty" />
+        <select id="unit">
+          <option value="pcs">pcs</option>
+          <option value="g">g</option>
+          <option value="kg">kg</option>
+          <option value="L">L</option>
+          <option value="ml">ml</option>
+        </select>
       </div>
+      <input type="number" id="price" placeholder="Price per unit" />
+      <button onclick="addItem()">Add</button>
     </section>
 
-    <section class="table-section">
-      <h2>Bill Items</h2>
-      <table id="billTable">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Items will be added here -->
-        </tbody>
-      </table>
-    </section>
+    <table id="billTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price/unit</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
     <section class="summary">
-      <label for="discount">Discount (%): </label>
-      <input type="number" id="discount" value="0" onchange="applyDiscount()" />
-      <p>Grand Total: ₹<span id="grandTotal">0.00</span></p>
-      <p>Final Total: ₹<span id="finalTotal">0.00</span></p>
+      <label for="discount">Discount %</label>
+      <input type="number" id="discount" value="0" oninput="updateTotals()" />
+      <p><strong>Final Total:</strong> ₹<span id="finalTotal">0.00</span></p>
+      <div class="buttons">
+        <button onclick="showPreview()">Preview Receipt</button>
+        <button onclick="window.print()">Print Receipt</button>
+      </div>
     </section>
-  </main>
+  </div>
 
-  <footer>
-    <button onclick="window.print()">🖨️ Print</button>
-  </footer>
+  <!-- Preview Modal -->
+  <div id="previewModal">
+    <div class="modal-content">
+      <h2>🧾 Banerjee Bhandar Receipt Preview</h2>
+      <div id="previewContent"></div>
+      <button onclick="closePreview()">Close Preview</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
-  <script>
-    // Set current date
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
-  </script>
 </body>
 </html>
