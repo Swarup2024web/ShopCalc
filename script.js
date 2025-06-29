@@ -1,104 +1,105 @@
-const items = [];
-const unitMap = {
-  g: 1,
-  kg: 1000,
-  ml: 1,
-  litre: 1000,
-  pcs: 1
-};
+let items = [];
 
-function addItem() {
-  const itemName = document.getElementById("itemName").value.trim();
-  const quantity = parseFloat(document.getElementById("quantity").value);
-  const quantityUnit = document.getElementById("quantityUnit").value;
-  const price = parseFloat(document.getElementById("price").value);
-  const priceUnit = document.getElementById("priceUnit").value;
+document.getElementById("addItemBtn").addEventListener("click", addItem);
+document.getElementById("previewBtn").addEventListener("click", previewReceipt);
+document.getElementById("printBtn").addEventListener("click", () => window.print());
 
-  if (!itemName || isNaN(quantity) || isNaN(price)) {
-    alert("Please enter valid item name, quantity, and price.");
-    return;
-  }
+function getConversionFactor(qtyUnit, priceUnit) {
+    const conversion = {
+        g: { kg: 0.001 },
+        kg: { g: 1000 },
+        ml: { l: 0.001 },
+        l: { ml: 1000 }
+    };
 
-  // Convert price to match quantity unit
-  let adjustedPrice = price;
-  if (quantityUnit !== priceUnit) {
-    if (unitMap[quantityUnit] && unitMap[priceUnit]) {
-      adjustedPrice = price * (unitMap[quantityUnit] / unitMap[priceUnit]);
-    } else {
-      alert("Incompatible units!");
-      return;
-    }
-  }
+    if (qtyUnit === priceUnit) return 1;
 
-  const total = (adjustedPrice * quantity).toFixed(2);
-
-  const item = {
-    name: itemName,
-    quantity,
-    quantityUnit,
-    price: price,
-    priceUnit,
-    total
-  };
-
-  items.push(item);
-  renderTable();
-  clearInputs();
+    return conversion[qtyUnit]?.[priceUnit] || (1 / (conversion[priceUnit]?.[qtyUnit] || 1));
 }
 
-function renderTable() {
-  const tbody = document.getElementById("itemTableBody");
-  tbody.innerHTML = "";
+function addItem() {
+    const name = document.getElementById("itemName").value.trim();
+    const qty = parseFloat(document.getElementById("itemQty").value);
+    const qtyUnit = document.getElementById("qtyUnit").value;
+    const pricePerUnit = parseFloat(document.getElementById("itemPrice").value);
+    const priceUnit = document.getElementById("priceUnit").value;
 
-  let grandTotal = 0;
+    if (!name || isNaN(qty) || isNaN(pricePerUnit)) {
+        alert("Please enter valid item details.");
+        return;
+    }
 
-  items.forEach((item, index) => {
-    grandTotal += parseFloat(item.total);
+    const factor = getConversionFactor(qtyUnit, priceUnit);
+    const convertedQty = qty * factor;
+    const total = convertedQty * pricePerUnit;
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${item.name}</td>
-      <td>${item.quantity} ${item.quantityUnit}</td>
-      <td>${item.price} /${item.priceUnit}</td>
-      <td>₹${item.total}</td>
-      <td>
-        <button class="action-btn edit-btn" onclick="editItem(${index})">Edit</button>
-        <button class="action-btn delete-btn" onclick="deleteItem(${index})">Delete</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  document.getElementById("totalAmount").innerText = `Total: ₹${grandTotal.toFixed(2)}`;
+    items.push({ name, qty, qtyUnit, pricePerUnit, priceUnit, total });
+    clearInputs();
+    updateReceipt();
 }
 
 function clearInputs() {
-  document.getElementById("itemName").value = "";
-  document.getElementById("quantity").value = "";
-  document.getElementById("price").value = "";
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemQty").value = "";
+    document.getElementById("itemPrice").value = "";
+}
+
+function updateReceipt() {
+    const tbody = document.querySelector("#itemTable tbody");
+    tbody.innerHTML = "";
+
+    let grandTotal = 0;
+
+    items.forEach((item, index) => {
+        grandTotal += item.total;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.qty} ${item.qtyUnit}</td>
+            <td>${item.pricePerUnit} per ${item.priceUnit}</td>
+            <td>₹${item.total.toFixed(2)}</td>
+            <td>
+                <button onclick="editItem(${index})">Edit</button>
+                <button onclick="deleteItem(${index})">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    document.getElementById("totalAmount").textContent = grandTotal.toFixed(2);
 }
 
 function deleteItem(index) {
-  items.splice(index, 1);
-  renderTable();
+    if (confirm("Delete this item?")) {
+        items.splice(index, 1);
+        updateReceipt();
+    }
 }
 
 function editItem(index) {
-  const item = items[index];
-  document.getElementById("itemName").value = item.name;
-  document.getElementById("quantity").value = item.quantity;
-  document.getElementById("quantityUnit").value = item.quantityUnit;
-  document.getElementById("price").value = item.price;
-  document.getElementById("priceUnit").value = item.priceUnit;
-  items.splice(index, 1);
-  renderTable();
+    const item = items[index];
+    document.getElementById("itemName").value = item.name;
+    document.getElementById("itemQty").value = item.qty;
+    document.getElementById("qtyUnit").value = item.qtyUnit;
+    document.getElementById("itemPrice").value = item.pricePerUnit;
+    document.getElementById("priceUnit").value = item.priceUnit;
+
+    items.splice(index, 1);
+    updateReceipt();
 }
 
 function previewReceipt() {
-  window.print();
-}
+    const shopName = "Banerjee Bhandar";
+    const date = document.getElementById("shopDate").value;
+    const previewArea = document.getElementById("receiptArea");
 
-function printReceipt() {
-  window.print();
-      }
+    if (!date) {
+        alert("Please select a date.");
+        return;
+    }
+
+    previewArea.querySelector(".receipt-title").textContent = shopName;
+    previewArea.querySelector(".receipt-date").textContent = `Date: ${date}`;
+    updateReceipt();
+                              }
