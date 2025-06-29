@@ -1,146 +1,111 @@
-// Store item list
 let items = [];
 
 function convertUnits(quantity, fromUnit, toUnit) {
-    const unitFactors = {
-        pcs: 1,
-        g: 1,
-        kg: 1000,
-        ml: 1,
-        L: 1000
-    };
-
-    if (fromUnit === toUnit) return quantity;
-
-    return (quantity * unitFactors[fromUnit]) / unitFactors[toUnit];
+  const units = {
+    pcs: 1,
+    g: 1,
+    kg: 1000,
+    ml: 1,
+    L: 1000
+  };
+  if (fromUnit === toUnit) return quantity;
+  return (quantity * units[fromUnit]) / units[toUnit];
 }
 
 function addItem() {
-    const itemName = document.getElementById("item-name").value.trim();
-    const quantity = parseFloat(document.getElementById("quantity").value);
-    const qtyUnit = document.getElementById("qty-unit").value;
-    const pricePerUnit = parseFloat(document.getElementById("price-per-unit").value);
-    const priceUnit = document.getElementById("price-unit").value;
+  const name = document.getElementById("item-name").value.trim();
+  const qty = parseFloat(document.getElementById("quantity").value);
+  const qtyUnit = document.getElementById("qty-unit").value;
+  const rate = parseFloat(document.getElementById("price-per-unit").value);
+  const rateUnit = document.getElementById("price-unit").value;
 
-    if (!itemName || isNaN(quantity) || isNaN(pricePerUnit)) {
-        alert("Please fill all fields correctly.");
-        return;
-    }
+  if (!name || isNaN(qty) || isNaN(rate)) {
+    alert("Please enter valid item details.");
+    return;
+  }
 
-    // Convert quantity to match price unit
-    const convertedQty = convertUnits(quantity, qtyUnit, priceUnit);
-    const total = (convertedQty * pricePerUnit).toFixed(2);
+  const convertedQty = convertUnits(qty, qtyUnit, rateUnit);
+  const total = (convertedQty * rate).toFixed(2);
 
-    const item = {
-        name: itemName,
-        quantity,
-        qtyUnit,
-        pricePerUnit,
-        priceUnit,
-        total
-    };
-
-    items.push(item);
-    displayItems();
-    clearForm();
+  items.push({ name, qty, qtyUnit, rate, rateUnit, total });
+  displayItems();
+  clearInputs();
 }
 
 function displayItems() {
-    const tableBody = document.getElementById("item-table-body");
-    tableBody.innerHTML = "";
+  const tbody = document.getElementById("item-table-body");
+  tbody.innerHTML = "";
 
-    items.forEach((item, index) => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.name}</td>
-            <td>${item.quantity} ${item.qtyUnit}</td>
-            <td>${item.pricePerUnit} / ${item.priceUnit}</td>
-            <td>${item.total}</td>
-            <td>
-                <button onclick="editItem(${index})">Edit</button>
-                <button onclick="deleteItem(${index})">Delete</button>
-            </td>
-        `;
-
-        tableBody.appendChild(row);
-    });
+  items.forEach((item, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${item.name}</td>
+      <td>${item.qty} ${item.qtyUnit}</td>
+      <td>${item.rate} / ${item.rateUnit}</td>
+      <td>${item.total}</td>
+      <td>
+        <button onclick="editItem(${index})">Edit</button>
+        <button onclick="deleteItem(${index})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 
-function clearForm() {
-    document.getElementById("item-name").value = "";
-    document.getElementById("quantity").value = "";
-    document.getElementById("price-per-unit").value = "";
-    document.getElementById("qty-unit").value = "pcs";
-    document.getElementById("price-unit").value = "pcs";
+function clearInputs() {
+  document.getElementById("item-name").value = "";
+  document.getElementById("quantity").value = "";
+  document.getElementById("price-per-unit").value = "";
 }
 
 function deleteItem(index) {
-    if (confirm("Are you sure you want to delete this item?")) {
-        items.splice(index, 1);
-        displayItems();
-    }
+  if (confirm("Delete this item?")) {
+    items.splice(index, 1);
+    displayItems();
+  }
 }
 
 function editItem(index) {
-    const item = items[index];
-
-    document.getElementById("item-name").value = item.name;
-    document.getElementById("quantity").value = item.quantity;
-    document.getElementById("price-per-unit").value = item.pricePerUnit;
-    document.getElementById("qty-unit").value = item.qtyUnit;
-    document.getElementById("price-unit").value = item.priceUnit;
-
-    items.splice(index, 1);
-    displayItems();
+  const item = items[index];
+  document.getElementById("item-name").value = item.name;
+  document.getElementById("quantity").value = item.qty;
+  document.getElementById("qty-unit").value = item.qtyUnit;
+  document.getElementById("price-per-unit").value = item.rate;
+  document.getElementById("price-unit").value = item.rateUnit;
+  items.splice(index, 1);
+  displayItems();
 }
 
 function previewReceipt() {
-    const receiptDiv = document.getElementById("receipt");
-    const date = document.getElementById("date").value;
-    const shopName = "Banerjee Bhandar";
+  const date = document.getElementById("date").value;
+  if (!date) return alert("Please select a date.");
+  const receipt = document.getElementById("receipt");
 
-    if (!date) {
-        alert("Please select a date.");
-        return;
-    }
+  let html = `<h2>Banerjee Bhandar</h2><p>Date: ${date}</p><table><thead><tr>
+    <th>Sl</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody>`;
 
-    let html = `<h2>${shopName}</h2>`;
-    html += `<p>Date: ${date}</p>`;
-    html += `<table><thead><tr>
-        <th>Sl No.</th>
-        <th>Item</th>
-        <th>Qty</th>
-        <th>Price/unit</th>
-        <th>Total</th>
-    </tr></thead><tbody>`;
+  let grandTotal = 0;
+  items.forEach((item, i) => {
+    html += `<tr>
+      <td>${i + 1}</td>
+      <td>${item.name}</td>
+      <td>${item.qty} ${item.qtyUnit}</td>
+      <td>${item.rate} / ${item.rateUnit}</td>
+      <td>${item.total}</td>
+    </tr>`;
+    grandTotal += parseFloat(item.total);
+  });
 
-    let grandTotal = 0;
-
-    items.forEach((item, i) => {
-        html += `<tr>
-            <td>${i + 1}</td>
-            <td>${item.name}</td>
-            <td>${item.quantity} ${item.qtyUnit}</td>
-            <td>${item.pricePerUnit} / ${item.priceUnit}</td>
-            <td>${item.total}</td>
-        </tr>`;
-        grandTotal += parseFloat(item.total);
-    });
-
-    html += `</tbody></table>`;
-    html += `<h3>Total: ₹${grandTotal.toFixed(2)}</h3>`;
-
-    receiptDiv.innerHTML = html;
-    receiptDiv.style.display = "block";
+  html += `</tbody></table><h3>Total: ₹${grandTotal.toFixed(2)}</h3>`;
+  receipt.innerHTML = html;
+  receipt.style.display = "block";
 }
 
 function printReceipt() {
-    const receiptDiv = document.getElementById("receipt");
-    if (receiptDiv.innerHTML.trim() === "") {
-        alert("Please preview the receipt before printing.");
-        return;
-    }
-    window.print();
-}
+  if (!document.getElementById("receipt").innerHTML.trim()) {
+    alert("Preview first before printing.");
+    return;
+  }
+  window.print();
+            }
