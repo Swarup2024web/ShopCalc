@@ -1,5 +1,5 @@
 let items = [];
-let editingIndex = -1;
+let editIndex = -1;
 
 function addItem() {
   const item = document.getElementById("item").value.trim();
@@ -7,15 +7,15 @@ function addItem() {
   const price = parseFloat(document.getElementById("price").value);
 
   if (!item || isNaN(qty) || isNaN(price)) {
-    alert("Please enter valid item, quantity and price.");
+    alert("Please enter valid item name, quantity and price.");
     return;
   }
 
   const total = qty * price;
 
-  if (editingIndex > -1) {
-    items[editingIndex] = { item, qty, price, total };
-    editingIndex = -1;
+  if (editIndex >= 0) {
+    items[editIndex] = { item, qty, price, total };
+    editIndex = -1;
   } else {
     items.push({ item, qty, price, total });
   }
@@ -24,18 +24,20 @@ function addItem() {
   renderTable();
 }
 
+function clearForm() {
+  document.getElementById("item").value = "";
+  document.getElementById("qty").value = "";
+  document.getElementById("price").value = "";
+}
+
 function renderTable() {
   const tbody = document.querySelector("#billTable tbody");
   tbody.innerHTML = "";
 
-  let grandTotal = 0;
-
   items.forEach((entry, index) => {
-    grandTotal += entry.total;
+    const row = document.createElement("tr");
 
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
+    row.innerHTML = `
       <td>${entry.item}</td>
       <td>${entry.qty}</td>
       <td>₹${entry.price.toFixed(2)}</td>
@@ -46,22 +48,23 @@ function renderTable() {
       </td>
     `;
 
-    tbody.appendChild(tr);
+    tbody.appendChild(row);
   });
 
-  document.getElementById("grandTotal").innerText = grandTotal.toFixed(2);
-
-  const discount = parseFloat(document.getElementById("discount").value) || 0;
-  const finalTotal = grandTotal - (grandTotal * discount / 100);
-  document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
+  updateTotals();
 }
 
-function editItem(index) {
-  const entry = items[index];
-  document.getElementById("item").value = entry.item;
-  document.getElementById("qty").value = entry.qty;
-  document.getElementById("price").value = entry.price;
-  editingIndex = index;
+function updateTotals() {
+  const grandTotal = items.reduce((sum, entry) => sum + entry.total, 0);
+  const discount = parseFloat(document.getElementById("discount").value) || 0;
+  const finalTotal = grandTotal - (grandTotal * discount / 100);
+
+  document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
+  document.getElementById("finalTotal").textContent = finalTotal.toFixed(2);
+}
+
+function applyDiscount() {
+  updateTotals();
 }
 
 function deleteItem(index) {
@@ -71,12 +74,10 @@ function deleteItem(index) {
   }
 }
 
-function applyDiscount() {
-  renderTable(); // Discount is handled during render
-}
-
-function clearForm() {
-  document.getElementById("item").value = "";
-  document.getElementById("qty").value = "";
-  document.getElementById("price").value = "";
+function editItem(index) {
+  const item = items[index];
+  document.getElementById("item").value = item.item;
+  document.getElementById("qty").value = item.qty;
+  document.getElementById("price").value = item.price;
+  editIndex = index;
 }
