@@ -1,131 +1,228 @@
-body {
-  font-family: "Segoe UI", sans-serif;
-  background: #e8f0fe;
+/* Reset and base */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fc;
   color: #333;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+/* Header */
+header {
+  background: #2d98da;
+  color: white;
+  padding: 15px;
   text-align: center;
-  color: #2c3e50;
+  border-radius: 8px;
 }
 
-.top-bar {
-  text-align: right;
-  margin: 10px 0;
+header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
 }
 
-input[type="date"] {
-  padding: 6px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+.top-info {
+  margin-top: 10px;
 }
 
-.form {
+.top-info input[type="date"] {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  font-size: 14px;
+}
+
+/* Input section */
+.input-section {
+  margin: 20px 0;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 20px 0;
-  align-items: center;
+  justify-content: center;
 }
 
-.inline-group {
+.input-section input,
+.input-section select {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.input-pair {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-input, select {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  padding: 10px 20px;
-  background: #2ecc71;
+.input-section button {
+  background: #27ae60;
   color: white;
   border: none;
-  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  transition: background 0.3s ease;
 }
 
-button:hover {
-  background: #27ae60;
+.input-section button:hover {
+  background: #219150;
 }
 
-table {
+/* Receipt table */
+.receipt-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.receipt-section h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+#itemTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 16px;
+  margin-bottom: 15px;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
+#itemTable th,
+#itemTable td {
+  border: 1px solid #ccc;
+  padding: 8px;
   text-align: center;
 }
 
-th {
-  background: #34495e;
+#itemTable th {
+  background: #dff9fb;
+  font-weight: bold;
+}
+
+#itemTable td button {
+  padding: 4px 8px;
+  font-size: 12px;
+  margin: 0 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#itemTable td .edit-btn {
+  background: #f1c40f;
   color: white;
 }
 
-#totalDisplay {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 15px;
-  text-align: right;
-  color: #e67e22;
+#itemTable td .delete-btn {
+  background: #e74c3c;
+  color: white;
 }
 
+/* Button group */
 .button-group {
-  text-align: center;
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.receipt-preview {
-  margin-top: 30px;
-  background: #fdfdfd;
+.button-group button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  transition: 0.3s;
+}
+
+.button-group button:first-child {
+  background: #2980b9;
+}
+
+.button-group button:first-child:hover {
+  background: #2471a3;
+}
+
+.button-group button:last-child {
+  background: #16a085;
+}
+
+.button-group button:last-child:hover {
+  background: #138d75;
+}
+
+/* Receipt Preview */
+#receiptPreview {
+  background: #fff;
   padding: 20px;
-  border: 2px dashed #aaa;
-  border-radius: 10px;
-}
-
-.hidden {
+  border-radius: 8px;
   display: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 600px) {
-  .form {
+#receiptPreview h2 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+#receiptContent {
+  font-family: monospace;
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .input-section {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .inline-group {
+  .input-pair {
     flex-direction: row;
     justify-content: space-between;
   }
 
-  button {
-    width: 100%;
+  .button-group {
+    flex-direction: column;
+    align-items: center;
   }
 
-  table {
-    font-size: 14px;
+  #itemTable th, #itemTable td {
+    font-size: 12px;
+    padding: 6px;
   }
 }
+
+/* Print Layout */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #receiptPreview, #receiptPreview * {
+    visibility: visible;
+  }
+
+  #receiptPreview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  }
