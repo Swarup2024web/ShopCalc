@@ -1,193 +1,173 @@
-/* Reset and Base Styles */
+/* General Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Body & Fonts */
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   color: #333;
   padding: 20px;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 /* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-}
-
-.header h1 {
-  color: #2c3e50;
-  font-size: 28px;
-}
-
-.header input[type="date"] {
-  padding: 8px;
-  font-size: 16px;
-}
-
-/* Form */
-.form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+header {
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.form input, .form button {
+header h1 {
+  font-size: 32px;
+  color: #2c3e50;
+}
+
+header p {
+  font-size: 16px;
+  margin-top: 5px;
+  color: #555;
+}
+
+/* Form Section */
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.form-group input {
   padding: 10px;
   font-size: 16px;
-}
-
-.form input {
-  flex: 1;
-  min-width: 120px;
+  flex: 1 1 150px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
-.form button {
+.form-group button {
+  padding: 10px 20px;
+  font-size: 16px;
   background-color: #27ae60;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.3s;
 }
 
-.form button:hover {
+.form-group button:hover {
   background-color: #219150;
 }
 
-/* Table Styles */
-table {
+/* Table Section */
+.table-section table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-table th, table td {
-  border: 1px solid #ddd;
+.table-section th, .table-section td {
+  border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
 }
 
-table th {
-  background-color: #34495e;
+.table-section th {
+  background-color: #2c3e50;
   color: white;
 }
 
-table td button {
+.table-section td button {
   padding: 5px 10px;
-  margin: 2px;
+  font-size: 14px;
   border: none;
   border-radius: 4px;
-  font-size: 14px;
+  margin: 2px;
   cursor: pointer;
 }
 
-table td .edit {
+.table-section td .edit {
   background-color: #f39c12;
   color: white;
 }
 
-table td .delete {
+.table-section td .delete {
   background-color: #e74c3c;
   color: white;
 }
 
 /* Summary Section */
 .summary {
-  margin-top: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .summary input {
   padding: 8px;
   font-size: 16px;
-  width: 150px;
-  margin-right: 10px;
+  width: 80px;
+  text-align: center;
+  margin-left: 5px;
+  margin-bottom: 10px;
 }
 
-.summary button {
-  padding: 8px 16px;
+.summary p {
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+footer button {
+  padding: 10px 20px;
   font-size: 16px;
   background-color: #2980b9;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.summary button:hover {
-  background-color: #2471a3;
-}
-
-.summary p {
-  margin-top: 10px;
-  font-size: 18px;
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.footer button {
-  background-color: #2c3e50;
-  color: white;
-  font-size: 16px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.footer button:hover {
-  background-color: #1a252f;
+footer button:hover {
+  background-color: #1c6ca4;
 }
 
 /* Print Styles */
 @media print {
-  body {
-    background: white;
-  }
-
-  .form, .summary input, .summary button, .footer {
+  .form-group,
+  .table-section td button,
+  .summary input,
+  footer {
     display: none;
   }
 
-  .header {
-    justify-content: center;
+  .summary {
+    margin-top: 20px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .form-group {
     flex-direction: column;
-    text-align: center;
+    align-items: stretch;
   }
 
-  .header h1 {
-    font-size: 24px;
+  .form-group input,
+  .form-group button {
+    width: 100%;
   }
 
-  table th, table td {
-    font-size: 14px;
-    padding: 6px;
+  .summary input {
+    width: 100px;
   }
-
-  .summary p {
-    font-size: 16px;
-  }
-  }
+    }
