@@ -1,67 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Banerjee Bhandar - Shop Calculator</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Banerjee Bhandar - Shop Calculator</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🛒 Banerjee Bhandar</h1>
-      <p>Date: <span id="date"></span></p>
-    </header>
+    <div class="container">
+        <h1>Banerjee Bhandar</h1>
+        <div class="top-inputs">
+            <label>Date: <input type="date" id="shopDate" /></label>
+        </div>
 
-    <section class="inputs">
-      <input type="text" id="item" placeholder="Item name" />
-      <div class="input-group">
-        <input type="number" id="qty" placeholder="Qty" />
-        <select id="unit">
-          <option value="pcs">pcs</option>
-          <option value="g">g</option>
-          <option value="kg">kg</option>
-          <option value="L">L</option>
-          <option value="ml">ml</option>
-        </select>
-      </div>
-      <input type="number" id="price" placeholder="Price per unit" />
-      <button onclick="addItem()">Add</button>
-    </section>
+        <div class="inputs">
+            <input type="text" id="itemName" placeholder="Item Name" />
+            <input type="number" id="itemQty" placeholder="Quantity" />
+            <select id="itemUnit">
+                <option value="pcs">pcs</option>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="ltr">ltr</option>
+            </select>
 
-    <table id="billTable">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Qty</th>
-          <th>Price/unit</th>
-          <th>Total</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+            <input type="number" id="itemPrice" placeholder="Price per unit" />
+            <select id="priceUnit">
+                <option value="pcs">pcs</option>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="ltr">ltr</option>
+            </select>
 
-    <section class="summary">
-      <label for="discount">Discount %</label>
-      <input type="number" id="discount" value="0" oninput="updateTotals()" />
-      <p><strong>Final Total:</strong> ₹<span id="finalTotal">0.00</span></p>
-      <div class="buttons">
-        <button onclick="showPreview()">Preview Receipt</button>
-        <button onclick="window.print()">Print Receipt</button>
-      </div>
-    </section>
-  </div>
+            <button onclick="addItem()">Add Item</button>
+        </div>
 
-  <!-- Preview Modal -->
-  <div id="previewModal">
-    <div class="modal-content">
-      <h2>🧾 Banerjee Bhandar Receipt Preview</h2>
-      <div id="previewContent"></div>
-      <button onclick="closePreview()">Close Preview</button>
+        <table id="itemTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price/Unit</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="totals">
+            <strong>Total: <span id="total">₹0.00</span></strong>
+        </div>
+
+        <div class="buttons">
+            <button onclick="showPreview()">Preview Receipt</button>
+            <button onclick="printReceipt()">Print Receipt</button>
+        </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePreview()">&times;</span>
+            <div id="previewContent"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
