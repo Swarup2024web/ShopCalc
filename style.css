@@ -1,233 +1,154 @@
-/* Reset */
-* {
-  box-sizing: border-box;
+/* style.css */
+
+body {
   margin: 0;
   padding: 0;
-}
-
-/* Body */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f2f6fc;
+  font-family: 'Poppins', sans-serif;
+  background: #f0f4ff;
   color: #333;
-  padding: 20px;
 }
 
-/* Container */
 .container {
-  max-width: 850px;
-  margin: auto;
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(15px);
+  border-radius: 30px;
+  box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.1),
+              -10px -10px 30px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Title */
 .shop-title {
   text-align: center;
-  font-size: 36px;
-  color: #374785;
-  margin-bottom: 20px;
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  background: linear-gradient(90deg, #ff6ec4, #7873f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Top Section */
 .top-section {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-.top-section label {
-  margin-right: 8px;
-  font-weight: 500;
-}
-
-.top-section input {
-  padding: 8px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-/* Input Section */
-.input-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 25px;
-}
-
-.input-section input,
-.input-section select {
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  width: calc(20% - 10px);
-  min-width: 100px;
-}
-
-.input-section button {
-  padding: 10px 16px;
-  font-size: 15px;
-  background-color: #5b9bd5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.input-section button:hover {
-  background-color: #4177c2;
-}
-
-/* Table */
-table {
-  width: 100%;
-  border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-thead {
-  background-color: #374785;
-  color: white;
+.top-section input {
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #e0e5ec;
+  box-shadow: inset 4px 4px 10px #bebebe,
+              inset -4px -4px 10px #ffffff;
+  color: #333;
 }
 
-th,
-td {
-  padding: 12px;
-  border: 1px solid #ddd;
+.input-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-section input,
+.input-section select,
+.input-section button {
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #e0e5ec;
+  box-shadow: 5px 5px 10px #bebebe,
+              -5px -5px 10px #ffffff;
+  color: #333;
+  transition: 0.3s ease;
+  min-width: 120px;
+}
+
+.input-section input::placeholder {
+  color: #888;
+}
+
+.input-section button {
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  text-shadow: 1px 1px 2px #999;
+  box-shadow: none;
+}
+
+.input-section button:hover {
+  opacity: 0.9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 15px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+th, td {
+  padding: 12px 10px;
   text-align: center;
-  font-size: 14px;
+  border-bottom: 1px solid #ccc;
+}
+
+th {
+  background: linear-gradient(to right, #c1c8ff, #ffd1dc);
+  color: #333;
+  font-weight: 600;
 }
 
 td button {
   padding: 6px 10px;
-  font-size: 13px;
   border: none;
-  border-radius: 4px;
-  margin: 0 3px;
-  cursor: pointer;
-  background-color: #f0ad4e;
+  border-radius: 8px;
+  background-color: #ff7b7b;
   color: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 td button:hover {
-  background-color: #ec971f;
+  background-color: #ff4f4f;
 }
 
-/* Buttons (Preview & Print) */
 .buttons {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
 .buttons button {
-  background-color: #28a745;
-  color: white;
+  padding: 12px 20px;
   border: none;
+  border-radius: 15px;
+  background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+  color: #333;
   font-size: 16px;
-  padding: 10px 20px;
-  border-radius: 6px;
-  margin: 10px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  box-shadow: 5px 5px 15px #bebebe, -5px -5px 15px #ffffff;
+  transition: all 0.3s ease-in-out;
 }
 
 .buttons button:hover {
-  background-color: #218838;
+  transform: scale(1.05);
 }
 
-.buttons button i {
-  margin-right: 6px;
-}
-
-/* Receipt Area */
 .receipt-area {
-  display: none;
-  background-color: #fff;
-  border: 1px solid #ccc;
   margin-top: 30px;
-  padding: 15px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 360px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 14px;
-}
-
-.receipt-area h2 {
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 20px;
-  color: #374785;
-}
-
-.receipt-area table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.receipt-area th,
-.receipt-area td {
-  padding: 6px;
-  border: 1px solid #aaa;
-  font-size: 13px;
-  text-align: left;
-}
-
-.receipt-area h3 {
-  text-align: right;
-  margin-top: 15px;
-  font-size: 16px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.05);
+  white-space: pre-wrap;
   color: #333;
-}
-
-/* Print Style */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-
-  .receipt-area,
-  .receipt-area * {
-    visibility: visible;
-  }
-
-  .receipt-area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80mm;
-    padding: 10px;
-    font-size: 12px;
-  }
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .input-section {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .input-section input,
-  .input-section select {
-    width: 100%;
-  }
-
-  table th,
-  table td {
-    font-size: 13px;
-    padding: 8px;
-  }
-
-  .buttons button {
-    width: 100%;
-    margin: 10px 0;
-  }
-}
+  font-family: 'Courier New', monospace;
+                                      }
