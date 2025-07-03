@@ -1,56 +1,35 @@
 let items = [];
 
-function convertUnits(quantity, fromUnit, toUnit) {
-  const units = {
-    pcs: 1,
-    g: 1,
-    kg: 1000,
-    ml: 1,
-    L: 1000
-  };
-  if (fromUnit === toUnit) return quantity;
-  return (quantity * units[fromUnit]) / units[toUnit];
-}
-
 function addItem() {
   const name = document.getElementById("item-name").value.trim();
   const qty = parseFloat(document.getElementById("quantity").value);
   const qtyUnit = document.getElementById("qty-unit").value;
-  const rate = parseFloat(document.getElementById("price-per-unit").value);
-  const rateUnit = document.getElementById("price-unit").value;
+  const pricePerUnit = parseFloat(document.getElementById("price-per-unit").value);
+  const priceUnit = document.getElementById("price-unit").value;
 
-  if (!name || isNaN(qty) || isNaN(rate)) {
-    alert("Please enter valid item details.");
+  if (!name || isNaN(qty) || isNaN(pricePerUnit)) {
+    alert("Please fill in all fields correctly.");
     return;
   }
 
-  const convertedQty = convertUnits(qty, qtyUnit, rateUnit);
-  const total = (convertedQty * rate).toFixed(2);
+  if (qtyUnit !== priceUnit) {
+    alert("Units must match for quantity and price.");
+    return;
+  }
 
-  items.push({ name, qty, qtyUnit, rate, rateUnit, total });
-  displayItems();
+  const total = qty * pricePerUnit;
+
+  const newItem = {
+    name,
+    qty,
+    qtyUnit,
+    pricePerUnit,
+    total
+  };
+
+  items.push(newItem);
+  updateTable();
   clearInputs();
-}
-
-function displayItems() {
-  const tbody = document.getElementById("item-table-body");
-  tbody.innerHTML = "";
-
-  items.forEach((item, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${item.name}</td>
-      <td>${item.qty} ${item.qtyUnit}</td>
-      <td>${item.rate} / ${item.rateUnit}</td>
-      <td>${item.total}</td>
-      <td>
-        <button onclick="editItem(${index})">Edit</button>
-        <button onclick="deleteItem(${index})">Delete</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
 }
 
 function clearInputs() {
@@ -59,53 +38,67 @@ function clearInputs() {
   document.getElementById("price-per-unit").value = "";
 }
 
-function deleteItem(index) {
-  if (confirm("Delete this item?")) {
-    items.splice(index, 1);
-    displayItems();
-  }
+function updateTable() {
+  const tbody = document.getElementById("item-table-body");
+  tbody.innerHTML = "";
+
+  items.forEach((item, index) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${item.name}</td>
+      <td>${item.qty} ${item.qtyUnit}</td>
+      <td>₹${item.pricePerUnit.toFixed(2)} /${item.qtyUnit}</td>
+      <td>₹${item.total.toFixed(2)}</td>
+      <td><button onclick="removeItem(${index})">Delete</button></td>
+    `;
+
+    tbody.appendChild(row);
+  });
 }
 
-function editItem(index) {
-  const item = items[index];
-  document.getElementById("item-name").value = item.name;
-  document.getElementById("quantity").value = item.qty;
-  document.getElementById("qty-unit").value = item.qtyUnit;
-  document.getElementById("price-per-unit").value = item.rate;
-  document.getElementById("price-unit").value = item.rateUnit;
+function removeItem(index) {
   items.splice(index, 1);
-  displayItems();
+  updateTable();
 }
 
 function previewReceipt() {
+  const receiptArea = document.getElementById("receipt");
   const date = document.getElementById("date").value;
-  if (!date) return alert("Please select a date.");
-  const receipt = document.getElementById("receipt");
+  if (!date) {
+    alert("Please select a date.");
+    return;
+  }
 
-  let html = `<h2>Banerjee Bhandar</h2><p>Date: ${date}</p><table><thead><tr>
-    <th>Sl</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody>`;
+  if (items.length === 0) {
+    receiptArea.innerHTML = "<p>No items to display.</p>";
+    return;
+  }
+
+  let receiptText = `🧾 Banerjee Bhandar Receipt\n📅 Date: ${date}\n\n`;
+  receiptText += "--------------------------------------------------\n";
+  receiptText += "No.  Item         Qty      Rate        Total\n";
+  receiptText += "--------------------------------------------------\n";
 
   let grandTotal = 0;
-  items.forEach((item, i) => {
-    html += `<tr>
-      <td>${i + 1}</td>
-      <td>${item.name}</td>
-      <td>${item.qty} ${item.qtyUnit}</td>
-      <td>${item.rate} / ${item.rateUnit}</td>
-      <td>${item.total}</td>
-    </tr>`;
-    grandTotal += parseFloat(item.total);
+
+  items.forEach((item, index) => {
+    const itemName = item.name.padEnd(12, ' ');
+    const qty = `${item.qty} ${item.qtyUnit}`.padEnd(9, ' ');
+    const rate = `₹${item.pricePerUnit}/${item.qtyUnit}`.padEnd(12, ' ');
+    const total = `₹${item.total.toFixed(2)}`;
+    receiptText += `${String(index + 1).padEnd(4)} ${itemName}${qty}${rate}${total}\n`;
+    grandTotal += item.total;
   });
 
-  html += `</tbody></table><h3>Total: ₹${grandTotal.toFixed(2)}</h3>`;
-  receipt.innerHTML = html;
-  receipt.style.display = "block";
+  receiptText += "--------------------------------------------------\n";
+  receiptText += `🧮 Grand Total: ₹${grandTotal.toFixed(2)}\n`;
+  receiptText += "--------------------------------------------------\n";
+
+  receiptArea.textContent = receiptText;
 }
 
 function printReceipt() {
-  if (!document.getElementById("receipt").innerHTML.trim()) {
-    alert("Preview first before printing.");
-    return;
-  }
   window.print();
-            }
+      }
