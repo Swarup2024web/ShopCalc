@@ -4,7 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Bhandar - Shop Calculator</title>
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (optional, for icons) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Script -->
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -12,13 +22,14 @@
     <h1 class="shop-title">Banerjee Bhandar</h1>
 
     <div class="top-section">
-      <label for="date">Date:</label>
+      <label for="date">Date:&nbsp;</label>
       <input type="date" id="date" />
     </div>
 
     <div class="input-section">
       <input type="text" id="item-name" placeholder="Item Name" />
       <input type="number" id="quantity" placeholder="Qty" />
+
       <select id="qty-unit">
         <option value="pcs">pcs</option>
         <option value="g">g</option>
@@ -28,6 +39,7 @@
       </select>
 
       <input type="number" id="price-per-unit" placeholder="Price/unit" />
+
       <select id="price-unit">
         <option value="pcs">pcs</option>
         <option value="g">g</option>
@@ -64,8 +76,5 @@
 
     <div id="receipt" class="receipt-area"></div>
   </div>
-
-  <!-- Font Awesome CDN -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
